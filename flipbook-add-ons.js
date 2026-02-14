@@ -160,7 +160,7 @@ const HotspotManager = {
 
         // Prevent duplicate layers
         if(container.querySelector('.fbpH-hotspot-layer')) return;
-
+container.style.transformStyle = "preserve-3d";
         const layer = document.createElement('div');
         layer.className = 'fbpH-hotspot-layer';
         
@@ -287,7 +287,7 @@ const MediaManager = {
 
         // Prevent duplicates
         if(container.querySelector('.fbpH-media-layer')) return;
-
+container.style.transformStyle = "preserve-3d";
         const layer = document.createElement('div');
         layer.className = 'fbpH-media-layer';
 
