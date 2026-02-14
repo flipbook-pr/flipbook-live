@@ -2,48 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FlipBook Pro - Ultimate Landing Page</title>
-        <link rel="stylesheet" href="style.flipbook-proH.css"> 	
+         <link rel="stylesheet" href="style.flipbook-proH.css"> 	
 
     <!-- 🔥 Custom Hotspot CSS (Link Here) -->
-    <link rel="stylesheet" href="style.flipbook-add-ons.css">
-	
+    <link rel="stylesheet" href="style.flipbook-add-ons.css">   
     <!-- Icons & Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&family=Fira+Code:wght@400&display=swap" rel="stylesheet">
 
+    <!-- Custom CSS Linked (If needed) -->
+    <!-- <link rel="stylesheet" href="style.flipbook-proH.css"> -->
+
     <style>
-        /* --- CORE VARIABLES --- */
+        /* --- 1. CORE VARIABLES & RESET --- */
         :root {
             --primary-gradient: linear-gradient(135deg, #FF6B6B, #FF8E53);
             --secondary-gradient: linear-gradient(135deg, #4e54c8, #8f94fb);
             --bg-dark: #0f172a;
             --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-header: rgba(15, 23, 42, 0.85); 
+            --glass-header: rgba(15, 23, 42, 0.95); 
             --glass-border: rgba(255, 255, 255, 0.08);
             --text-main: 'Poppins', sans-serif;
             --text-head: 'Outfit', sans-serif;
             --accent-color: #FF8E53;
         }
 
-        /* --- GLOBAL RESET & SCROLL --- */
-        * { box-sizing: border-box; outline: none; }
-        html { scroll-behavior: smooth; }
+        * { box-sizing: border-box; outline: none; margin: 0; padding: 0; }
         
-        body {
-            margin: 0; padding: 0;
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden !important; /* ডানে-বামে স্ক্রল বন্ধ */
             background-color: var(--bg-dark);
             font-family: var(--text-main);
             color: white;
-            overflow-x: hidden;
+            line-height: 1.6;
+            scroll-behavior: smooth;
         }
 
-        /* --- HEADER --- */
+        /* --- 2. HEADER --- */
         header {
-            position: fixed; top: 0; left: 0; width: 100%; height: 80px;
+            position: fixed; top: 0; left: 0; width: 100%; height: 75px;
             display: flex; align-items: center; justify-content: space-between;
-            padding: 0 50px;
+            padding: 0 5%; /* Responsive Padding */
             background: var(--glass-header);
             backdrop-filter: blur(15px);
             border-bottom: 1px solid var(--glass-border);
@@ -51,208 +54,188 @@
         }
 
         .brand-logo {
-            font-family: var(--text-head); font-weight: 700; font-size: 24px;
+            font-family: var(--text-head); font-weight: 700; font-size: 22px;
             color: #fff; display: flex; align-items: center; gap: 10px;
             text-decoration: none;
         }
         .brand-logo i { 
             background: var(--primary-gradient); 
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            font-size: 28px;
+            font-size: 26px;
         }
 
-        .nav-menu { display: flex; gap: 30px; list-style: none; margin: 0; padding: 0; }
+        .nav-menu { display: flex; gap: 30px; list-style: none; }
         .nav-link {
             color: #94a3b8; text-decoration: none; font-size: 15px; font-weight: 500;
             transition: 0.3s; position: relative; padding: 5px 0;
         }
         .nav-link:hover { color: #fff; }
-        .nav-link::after {
-            content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 2px;
-            background: var(--accent-color); transition: 0.3s;
-        }
-        .nav-link:hover::after { width: 100%; }
 
         .btn-header {
             padding: 10px 25px; border-radius: 30px;
             background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
             color: white; font-size: 14px; font-weight: 600; text-decoration: none;
-            transition: 0.3s;
+            transition: 0.3s; white-space: nowrap;
         }
         .btn-header:hover { background: var(--primary-gradient); border-color: transparent; }
 
-        /* --- SECTIONS COMMON --- */
+        /* --- 3. SECTIONS COMMON --- */
         section {
+            width: 100%; max-width: 1200px; margin: 0 auto;
 
-            max-width: 1200px; margin: 0 auto;
-
+            overflow: hidden; /* কন্টেন্ট বাইরে যাওয়া বন্ধ করে */
         }
-        /* Fix for sticky header overlay when clicking links */
+		
+		
+		#features{
+		            padding: 80px 20px;
+		
+		
+		
+		}
+		
+		
+		#docs{
+		            padding: 80px 20px;
+		
+		
+		
+		}
+		#support{
+		            padding: 80px 20px;
+		
+		
+		
+		}
+		
+        /* Sticky header fix */
         section { scroll-margin-top: 80px; }
 
-        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-header { text-align: center; margin-bottom: 50px; }
         .section-badge {
             display: inline-block; padding: 5px 15px; background: rgba(255, 142, 83, 0.1);
             color: var(--accent-color); border-radius: 20px; font-size: 12px; font-weight: 600;
             margin-bottom: 15px; border: 1px solid rgba(255, 142, 83, 0.2);
         }
-		
-		
-		
-		
-        .section-badge2 {
-            display: inline-block; padding: 5px 15px; background: rgba(255, 142, 83, 0.1);
-            color: var(--accent-color); border-radius: 20px; font-size: 19px; font-weight: 500;
-            margin-bottom: 15px; border: 2px solid rgba(255, 142, 83, 0.2);
-        }		
-		
-		
-		
-		
         .section-title {
-            font-family: var(--text-head); font-size: 40px; font-weight: 700; margin: 0 0 15px 0;
+            font-family: var(--text-head); 
+            font-size: clamp(32px, 5vw, 40px); /* Responsive Font */
+            font-weight: 700; margin: 0 0 15px 0;
             background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .section-desc { color: #94a3b8; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+        .section-desc { color: #94a3b8; max-width: 600px; margin: 0 auto; line-height: 1.6; font-size: 16px; }
 
-        /* --- HERO SECTION (HOME) --- */
+        /* --- 4. HERO SECTION --- */
         #home {
-            min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; border-bottom: none; padding-top: 100px; position: relative;
+            min-height: auto; 
+            padding-top: 140px; padding-bottom: 60px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; position: relative;
         }
         
         .hero-title {
-            font-family: var(--text-head); font-size: 65px; font-weight: 700; line-height: 1.1; margin-bottom: 25px;
-            letter-spacing: -2px;
+            font-family: var(--text-head); 
+            font-size: clamp(40px, 8vw, 65px); /* Responsive Clamp */
+            font-weight: 700; line-height: 1.1; margin-bottom: 25px;
+            letter-spacing: -1px;
         }
         .hero-title span {
             background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-		
-		
-        .hero-title2  {
-            font-size: 24px; font-weight: 500; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }		
-		
-		
-		
-        .btn-primary {
-            background: var(--primary-gradient); color: white; padding: 18px 50px;
-            font-size: 18px; font-weight: 600; border-radius: 50px; text-decoration: none;
-            display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
-            transition: 0.3s;
+        
+        .hero-title2 {
+            font-size: clamp(20px, 4vw, 24px); 
+            font-weight: 500; margin-bottom: 30px;
+            background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .btn-primary:hover { transform: translateY(-5px); box-shadow: 0 15px 50px rgba(255, 107, 107, 0.6); }
 
-        /* --- FEATURES SECTION --- */
-		
-		#features {
-		padding-top: 80px; 
-		
-		
-		}
-		
-		
-		#docs {
-		padding-top: 80px; 
-		
-		
-		}		
-		#support {
-				padding-top: 80px; 
-		
-		
-		
-		}
-		
-		
-		
-		
-		
+
+
+        #fbpH-file-upload { display: none; }
+        
+        .fbpH-library-title { margin-top: 30px; color: #fff; font-weight: 600; }
+
+        /* --- 5. FEATURES GRID (RESPONSIVE) --- */
         .features-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;
+            display: grid;
+            /* Auto-fit: মোবাইলে ১টা, ট্যাবে ২টা, পিসিতে ৩টা কলাম */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px; width: 100%;
         }
         .feature-card {
             background: var(--glass-bg); border: 1px solid var(--glass-border);
-            padding: 35px 30px; border-radius: 20px; transition: 0.3s;
+            padding: 30px 25px; border-radius: 20px; transition: 0.3s;
         }
-        .feature-card:hover { transform: translateY(-10px); background: rgba(255,255,255,0.05); border-color: var(--accent-color); }
+        .feature-card:hover { transform: translateY(-5px); border-color: var(--accent-color); }
         .f-icon {
             font-size: 28px; color: var(--accent-color); margin-bottom: 20px;
             background: rgba(255,255,255,0.05); width: 60px; height: 60px;
             display: flex; align-items: center; justify-content: center; border-radius: 15px;
         }
-        .f-title { font-size: 20px; font-weight: 600; margin-bottom: 10px; color: #fff; }
+        .f-title { font-size: 19px; font-weight: 600; margin-bottom: 10px; color: #fff; }
         .f-desc { font-size: 14px; color: #94a3b8; line-height: 1.6; }
 
-        /* --- DOCUMENTATION SECTION --- */
+        /* --- 6. DOCUMENTATION SECTION --- */
         .doc-container {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;
+            display: grid; grid-template-columns: 1fr; gap: 40px; align-items: center;
         }
-        .doc-steps { counter-reset: step; }
+        /* Desktop view for docs */
+        @media(min-width: 900px) {
+            .doc-container { grid-template-columns: 1fr 1fr; }
+        }
+
         .step-item { position: relative; padding-left: 50px; margin-bottom: 30px; }
         .step-item::before {
-            counter-increment: step; content: counter(step);
-            position: absolute; left: 0; top: 0; width: 35px; height: 35px;
+            content: ''; position: absolute; left: 0; top: 0; width: 35px; height: 35px;
             background: rgba(255,255,255,0.1); color: var(--accent-color);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-weight: 700; border: 1px solid var(--glass-border);
+            border-radius: 50%; border: 1px solid var(--glass-border);
         }
-        .step-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #fff; }
+        .step-title { font-size: 18px; font-weight: 600; margin-bottom: 5px; color: #fff; }
+
+        /* Code Box Fix for Mobile */
         .code-box {
             background: #1e293b; padding: 25px; border-radius: 15px;
-            border: 1px solid var(--glass-border); font-family: 'Fira Code', monospace;
-            font-size: 13px; color: #cbd5e1; position: relative;
+            border: 1px solid var(--glass-border); 
+            font-family: 'Fira Code', monospace; font-size: 13px; color: #cbd5e1;
+            width: 100%; 
+            overflow-x: auto; /* Horizontal Scroll inside box only */
         }
         .code-header {
-            display: flex; gap: 8px; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;
+            display: flex; gap: 8px; margin-bottom: 15px; 
+            border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;
         }
         .dot { width: 10px; height: 10px; border-radius: 50%; }
         .dot.red { background: #ff5f56; } .dot.yellow { background: #ffbd2e; } .dot.green { background: #27c93f; }
         
-        .hljs-keyword { color: #c678dd; } .hljs-string { color: #98c379; } .hljs-tag { color: #e06c75; }
+        pre { margin: 0; white-space: pre; } /* Keeps code format */
 
-        /* --- SUPPORT SECTION --- */
-        .support-form {
-            max-width: 600px; margin: 0 auto;
-            background: var(--glass-bg); padding: 40px; border-radius: 20px;
-            border: 1px solid var(--glass-border);
-        }
-        .form-group { margin-bottom: 20px; }
-        .form-label { display: block; margin-bottom: 8px; color: #cbd5e1; font-size: 14px; }
-        .form-input {
-            width: 100%; padding: 12px 15px; background: rgba(0,0,0,0.2);
-            border: 1px solid var(--glass-border); border-radius: 8px;
-            color: #fff; font-family: var(--text-main); transition: 0.3s;
-        }
-        .form-input:focus { border-color: var(--accent-color); background: rgba(0,0,0,0.4); }
-        .btn-submit {
-            width: 100%; background: var(--secondary-gradient); border: none;
-            padding: 15px; color: white; border-radius: 8px; font-weight: 600; cursor: pointer;
-            font-size: 16px; transition: 0.3s;
-        }
-        .btn-submit:hover { opacity: 0.9; transform: translateY(-2px); }
-
-        /* --- FOOTER --- */
+        /* --- 7. FOOTER --- */
         footer {
             text-align: center; padding: 40px 20px; background: #0b1120;
-            border-top: 1px solid var(--glass-border); color: #64748b; font-size: 14px;
+            border-top: 1px solid var(--glass-border); color: #64748b; font-size: 14px; margin-top: 40px;
         }
 
-        /* --- BACKGROUND ORBS --- */
+        /* --- 8. BACKGROUND ORBS (FIXED) --- */
         .bg-orb {
-            position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.3; z-index: -1;
+            position: fixed; /* Fixed prevents page expansion */
+            border-radius: 50%; filter: blur(90px); opacity: 0.25; z-index: -1; pointer-events: none;
         }
-        .orb-1 { width: 500px; height: 500px; background: #FF6B6B; top: -100px; left: -100px; }
-        .orb-2 { width: 400px; height: 400px; background: #4e54c8; top: 40%; right: -100px; }
-        .orb-3 { width: 300px; height: 300px; background: #27c93f; bottom: 0; left: 20%; }
+        .orb-1 { width: 400px; height: 400px; background: #FF6B6B; top: -100px; left: -100px; }
+        .orb-2 { width: 300px; height: 300px; background: #4e54c8; top: 40%; right: 0; transform: translateX(30%); }
+        .orb-3 { width: 250px; height: 250px; background: #27c93f; bottom: 0; left: 10%; }
 
-        /* Responsive */
-        @media (max-width: 750px) {
+        /* --- 9. MOBILE MEDIA QUERIES --- */
+        @media (max-width: 850px) {
             header { padding: 0 20px; }
-            .nav-menu { display: none; }
-            .hero-title { font-size: 40px; }
-            .doc-container { grid-template-columns: 1fr; }
+            .nav-menu { display: none; } /* Hide Menu on Mobile */
+            
+            #home { padding-top: 120px; }
+            .hero-title { line-height: 1.2; margin-bottom: 20px; }
+            
+            /* Feature grid automatically handles mobile via grid-template-columns */
+            
+            .code-box { padding: 15px; }
+            .btn-header { padding: 8px 15px; font-size: 13px; }
         }
     </style>
 </head>
@@ -270,24 +253,23 @@
             <li><a href="#home" class="nav-link">Home</a></li>
             <li><a href="#features" class="nav-link">Features</a></li>
             <li><a href="Documentation.html" class="nav-link">Documentation</a></li>
-
         </ul>
         <a href="#support" class="btn-header">Contact Us</a>
     </header>
 
     <!-- 1. HOME SECTION -->
     <section id="home">
-
         <h1 class="hero-title">
             The Most Advanced <br>
             <span>3D FlipBook Viewer</span>
         </h1>
-        <p class="section-desc" style="font-size: 18px; margin-bottom: 40px;">
+        <p class="section-desc">
             Transform your static PDFs and Images into realistic, interactive 3D books. 
             No coding required. Just upload and flip.
         </p>
-
-            <h2  class="hero-title2"><span>View your own PDFs or images as flipbooks</span></h2>		
+                <div style="padding-top:15px;"></div>
+        <h2 class="hero-title2"><span>View your own PDFs or images as flipbooks</span></h2>
+        
     <div id="fbpH-root">
         <!-- LANDING PAGE -->
         <div class="fbpH-landing" id="fbpH-landing">
@@ -306,13 +288,9 @@
         
         <!-- REST OF THE UI WILL BE INJECTED VIA SCRIPT -->
     </div>
-
-
     </section>
 
-    <!-- 2. FEATURES SECTION -->
-<!-- 2. FEATURES SECTION -->
-<!-- 2. FEATURES SECTION -->
+    <!-- 2. FEATURES SECTION (ALL FEATURES RESTORED) -->
     <section id="features">
         <div class="section-header">
             <span class="section-badge">Why Choose Us?</span>
@@ -375,51 +353,42 @@
                 <div class="f-title">User Friendly UI</div>
                 <div class="f-desc">Intuitive design with easy navigation controls, ensuring a seamless reading experience.</div>
             </div>
-
-            <!-- NEW FEATURES ADDED BELOW -->
-
-<!-- 10. Lead Generation -->
+            <!-- 10. Lead Generation -->
             <div class="feature-card">
                 <div class="f-icon"><i class="fas fa-user-check"></i></div>
                 <div class="f-title">Lead Generation</div>
                 <div class="f-desc">Capture leads with a customizable pop-up form before allowing access to the flipbook content.</div>
             </div>
-
             <!-- 11. Product Hotspots -->
             <div class="feature-card">
                 <div class="f-icon"><i class="fas fa-tags"></i></div>
                 <div class="f-title">Product Hotspots</div>
                 <div class="f-desc">Add interactive hotspots on images to show product details, pricing, and buy links.</div>
             </div>
-
             <!-- 12. Media Embedding -->
             <div class="feature-card">
                 <div class="f-icon"><i class="fas fa-photo-video"></i></div>
                 <div class="f-title">Media Embedding</div>
                 <div class="f-desc">Embed YouTube/Vimeo videos, audio files, and GIFs directly onto your book pages.</div>
             </div>
-
             <!-- 13. Text-to-Speech -->
             <div class="feature-card">
                 <div class="f-icon"><i class="fas fa-headphones-alt"></i></div>
                 <div class="f-title">Text-to-Speech</div>
                 <div class="f-desc">Built-in accessibility feature that reads out the PDF text content aloud to the user.</div>
             </div>
-
             <!-- 14. Search & Highlights -->
             <div class="feature-card">
                 <div class="f-icon"><i class="fas fa-highlighter"></i></div>
                 <div class="f-title">Search & Highlight</div>
                 <div class="f-desc">Deep search functionality that finds text instantly and highlights keywords across pages.</div>
             </div>
-
-            <!-- 15. Google Maps Embed (New) -->
+            <!-- 15. Google Maps Embed -->
             <div class="feature-card">
                 <div class="f-icon"><i class="fas fa-map-marked-alt"></i></div>
                 <div class="f-title">Google Maps Embed</div>
-                <div class="f-desc">Integrate interactive Google Maps directly onto pages to show store locations, venues, or real estate.</div>
+                <div class="f-desc">Integrate interactive Google Maps directly onto pages to show store locations.</div>
             </div>
-
         </div>
     </section>
 
@@ -451,18 +420,18 @@
                 <div class="code-header">
                     <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
                 </div>
-                <pre>
-<span class="hljs-tag">&lt;div</span> <span class="hljs-keyword">id</span>=<span class="hljs-string">"flipbook"</span><span class="hljs-tag">&gt;</span><span class="hljs-tag">&lt;/div&gt;</span>
+<pre>
+<span style="color:#c678dd">&lt;div</span> <span style="color:#e06c75">id</span>=<span style="color:#98c379">"flipbook"</span><span style="color:#c678dd">&gt;</span><span style="color:#c678dd">&lt;/div&gt;</span>
 
-<span class="hljs-tag">&lt;script&gt;</span>
-  <span class="hljs-keyword">const</span> book = <span class="hljs-keyword">new</span> FlipBook({
-      container: <span class="hljs-string">'#flipbook'</span>,
-      pdf: <span class="hljs-string">'assets/magazine.pdf'</span>,
-      mode: <span class="hljs-string">'3d'</span>,
-      zoom: <span class="hljs-keyword">true</span>
+<span style="color:#c678dd">&lt;script&gt;</span>
+  <span style="color:#c678dd">const</span> book = <span style="color:#c678dd">new</span> FlipBook({
+      container: <span style="color:#98c379">'#flipbook'</span>,
+      pdf: <span style="color:#98c379">'assets/magazine.pdf'</span>,
+      mode: <span style="color:#98c379">'3d'</span>,
+      zoom: <span style="color:#d19a66">true</span>
   });
-<span class="hljs-tag">&lt;/script&gt;</span>
-                </pre>
+<span style="color:#c678dd">&lt;/script&gt;</span>
+</pre>
             </div>
         </div>
     </section>
@@ -472,30 +441,25 @@
         <div class="section-header">
             <span class="section-badge">24/7 Support</span>
             <h2 class="section-title">Get in Touch</h2>
-            <p class="section-desc">Have a pre-sale question or need technical assistance? We are here to help. Follow our profile page</p>
+            <p class="section-desc">Have a pre-sale question or need technical assistance? We are here to help.</p>
         </div>
-
+        <!-- Support form can be added here -->
     </section>
 
     <!-- FOOTER -->
     <footer>
-
         &copy; 2026 FlipBook Pro. Developed with <i class="fas fa-heart" style="color:#FF6B6B"></i>
     </footer>
 
     <!-- Scripts -->
-
     <script src="https://cdn.jsdelivr.net/npm/page-flip/dist/js/page-flip.browser.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <!-- আপনার প্লাগইন ফাইলগুলো (যদি থাকে) -->
      <script src="flipbook-add-ons.js"></script>   
     <!-- আপনার প্লাগইন ফাইল -->
  
     <script src="js.flipbook-proH.js"></script>
     <script src="text-to-speech.js"></script>
-
-
-	
-	
 
 </body>
 </html>
