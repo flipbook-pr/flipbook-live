@@ -5,6 +5,12 @@
 .fbpH-hotspot-layer {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     z-index: 200; pointer-events: none;
+
+
+    /* এই লাইনটি জাদুর মতো কাজ করবে */
+    transform: translateZ(2px); 
+    -webkit-transform: translateZ(2px);
+   
 }
 
 .fbpH-hotspot-dot {
@@ -16,10 +22,16 @@
     animation: pulse-ring 2s infinite;
     display: flex; align-items: center; justify-content: center;
     color: #111; font-size: 24px; font-weight: bold; transform: translate(-50%, -50%);
+
+
+       transform: translate(-50%, -50%) translateZ(10px); 
+    -webkit-transform: translate(-50%, -50%) translateZ(10px);
+    will-change: transform;
 }
 
 .fbpH-hotspot-dot:hover { 
-    transform: translate(-50%, -50%) scale(1.2); 
+    transform: translate(-50%, -50%) translateZ(10px) scale(1.2); 
+    -webkit-transform: translate(-50%, -50%) translateZ(10px) scale(1.2);
     background: #fff; border-color: var(--fbpH-accent, #f1c40f);
 }
 
@@ -41,6 +53,14 @@
     text-align: left;
     pointer-events: auto;
     font-family: 'Poppins', sans-serif;
+
+
+
+       z-index: 2147483647; /* মডাল সবার উপরে থাকবে */
+    
+    /* মডালটি বইয়ের পেজের 3D জগত থেকে বের করে আনা */
+    transform: translate(-50%, -110%) translateZ(50px);
+    -webkit-transform: translate(-50%, -110%) translateZ(50px);
 }
 
 @keyframes popIn { 
@@ -157,6 +177,12 @@
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     z-index: 150; /* Hotspot এর নিচে কিন্তু Text এর উপরে */
     pointer-events: none; /* যাতে পেজের অন্য জায়গায় ক্লিক করা যায় */
+
+
+  /* মিডিয়া লেয়ারকেও ভাসিয়ে রাখা */
+    transform: translateZ(2px);
+    -webkit-transform: translateZ(2px);
+   
 }
 
 .fbpH-media-item {
