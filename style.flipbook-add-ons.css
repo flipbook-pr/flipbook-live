@@ -214,3 +214,71 @@
 .fbpH-media-audio audio {
     width: 90%; height: 30px; outline: none;
 }
+
+
+
+
+
+
+
+
+/* ==================================================
+   🔥 MOBILE FLICKERING FIX (ULTIMATE) - PART 2
+   ================================================== */
+
+/* 1. হটস্পট লেয়ারকে পেজ থেকে অনেক দূরে সরানো */
+.fbpH-hotspot-layer {
+    transform-style: preserve-3d !important;
+    -webkit-transform-style: preserve-3d !important;
+    
+    /* আগে 2px ছিল, এখন 50px করে দিচ্ছি যাতে মিশে না যায় */
+    transform: translateZ(20px) !important; 
+    -webkit-transform: translateZ(20px) !important;
+    
+    z-index: 500 !important;
+    pointer-events: none; /* লেয়ারে ক্লিক পড়বে না, শুধু ডটে পড়বে */
+}
+
+/* 2. হটস্পট ডটগুলোকে আলাদা লেয়ারে ফেলা */
+.fbpH-hotspot-dot {
+    /* হার্ডওয়্যার লেয়ার তৈরি করা */
+    transform: translate3d(-50%, -50%, 50px) !important; 
+    -webkit-transform: translate3d(-50%, -50%, 50px) !important;
+    
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    
+    will-change: transform;
+    z-index: 600 !important;
+    
+    /* শ্যাডো কমিয়ে দেয়া (শ্যাডো অনেক সময় ফ্লিকার করে) */
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8) !important; 
+}
+
+/* 3. মিডিয়া লেয়ার (অডিও/ভিডিও) ফিক্স */
+.fbpH-media-layer {
+    transform-style: preserve-3d !important;
+    
+    /* মিডিয়াকেও পেজ থেকে ভাসিয়ে রাখা */
+    transform: translateZ(15px) !important;
+    -webkit-transform: translateZ(15px) !important;
+    
+    z-index: 400 !important;
+}
+
+/* 4. মিডিয়া আইটেম (ভিডিও প্লেয়ার বক্স) */
+.fbpH-media-item {
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+}
+
+/* 5. পপআপ মডাল ফিক্স */
+.fbpH-product-modal {
+    /* মডালকে অন্য সব কিছুর উপরে নিয়ে আসা */
+    transform: translate3d(-50%, -110%, 100px) !important;
+    -webkit-transform: translate3d(-50%, -110%, 100px) !important;
+    
+    z-index: 2147483647 !important;
+    filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); /* box-shadow এর বদলে */
+}
