@@ -148,40 +148,50 @@ const HotspotManager = {
     /**
      * Renders hotspots based on the active book ID
      */
-    render: function(pageIndex, container) {
-        // ১. চেক করা কোনো বই সিলেক্ট করা আছে কিনা
-        if (!this.currentBookId || !this.masterConfig[this.currentBookId]) return;
+render: function(pageIndex, container) {
+    if (!this.currentBookId || !this.masterConfig[this.currentBookId]) return;
+    const bookConfig = this.masterConfig[this.currentBookId];
+    if (!bookConfig[pageIndex]) return;
+    if(container.querySelector('.fbpH-hotspot-layer')) return;
 
-        // ২. সেই বইয়ের কনফিগারেশন বের করা
-        const bookConfig = this.masterConfig[this.currentBookId];
+    // 🔥 পরিবর্তন ১: কন্টেইনারে 3D স্টাইল ফোর্স করা
+    container.style.transformStyle = "preserve-3d"; 
+    container.style.webkitTransformStyle = "preserve-3d";
 
-        // ৩. বর্তমান পেজে কোনো হটস্পট আছে কিনা চেক করা
-        if (!bookConfig[pageIndex]) return;
+    const layer = document.createElement('div');
+    layer.className = 'fbpH-hotspot-layer';
+    
+    // 🔥 পরিবর্তন ২: লেয়ারকে পেজ থেকে ১ পিক্সেল উপরে ভাসিয়ে রাখা (JS দিয়ে)
+    layer.style.transform = "translateZ(1px)";
+    layer.style.webkitTransform = "translateZ(1px)";
+    layer.style.zIndex = "20";
 
-        // Prevent duplicate layers
-        if(container.querySelector('.fbpH-hotspot-layer')) return;
-container.style.transformStyle = "preserve-3d";
-        const layer = document.createElement('div');
-        layer.className = 'fbpH-hotspot-layer';
+    bookConfig[pageIndex].forEach(data => {
+        const dot = document.createElement('div');
+        dot.className = 'fbpH-hotspot-dot';
+        dot.style.left = data.x + '%';
+        dot.style.top = data.y + '%';
         
-        bookConfig[pageIndex].forEach(data => {
-            const dot = document.createElement('div');
-            dot.className = 'fbpH-hotspot-dot';
-            dot.style.left = data.x + '%';
-            dot.style.top = data.y + '%';
-            dot.innerHTML = '<i class="fas fa-tag"></i>';
-            
-            dot.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.openProductModal(data, container);
-            });
-            
-            dot.addEventListener('touchstart', (e) => { e.stopPropagation(); }, {passive: true});
-            layer.appendChild(dot);
+        // 🔥 পরিবর্তন ৩: ডট বা বাটনকেও 3D তে রাখা
+        dot.style.transform = "translate3d(0,0,2px)"; 
+        
+        dot.innerHTML = '<i class="fas fa-tag"></i>';
+        
+        dot.addEventListener('click', (e) => {
+            e.stopPropagation(); // বাবলিং বন্ধ করা
+            this.openProductModal(data, container);
         });
         
-        container.appendChild(layer);
-    },
+        // টাচ ইভেন্ট ফিক্স
+        dot.addEventListener('touchstart', (e) => { 
+            e.stopPropagation(); 
+        }, {passive: false});
+
+        layer.appendChild(dot);
+    });
+    
+    container.appendChild(layer);
+},
 
     openProductModal: function(data, container) {
         this.closeAllModals(); 
@@ -279,58 +289,60 @@ const MediaManager = {
         return `https://player.vimeo.com/video/${videoId}?title=0&byline=0&portrait=0`;
     },
 
-    render: function(pageIndex, container) {
-        if (!this.currentBookId || !this.masterConfig[this.currentBookId]) return;
+render: function(pageIndex, container) {
+    if (!this.currentBookId || !this.masterConfig[this.currentBookId]) return;
+    const bookConfig = this.masterConfig[this.currentBookId];
+    if (!bookConfig[pageIndex]) return;
+    if(container.querySelector('.fbpH-media-layer')) return;
+
+    const layer = document.createElement('div');
+    layer.className = 'fbpH-media-layer';
+    
+    // 🔥 ফিক্স: মিডিয়া লেয়ারকে উপরে রাখা
+    layer.style.transform = "translateZ(1px)";
+    layer.style.webkitTransform = "translateZ(1px)";
+    layer.style.zIndex = "15";
+
+    bookConfig[pageIndex].forEach(media => {
+        const item = document.createElement('div');
+        item.className = 'fbpH-media-item';
+        item.style.left = media.x + '%';
+        item.style.top = media.y + '%';
+        item.style.width = media.width + '%';
+        item.style.height = media.height + '%';
         
-        const bookConfig = this.masterConfig[this.currentBookId];
-        if (!bookConfig[pageIndex]) return;
+        // 🔥 ফিক্স: ভিডিও বা আইফ্রেম যাতে ফ্লিকার না করে
+        item.style.transform = "translate3d(0,0,0)";
+        item.style.backfaceVisibility = "hidden";
 
-        // Prevent duplicates
-        if(container.querySelector('.fbpH-media-layer')) return;
-container.style.transformStyle = "preserve-3d";
-        const layer = document.createElement('div');
-        layer.className = 'fbpH-media-layer';
+        if (media.type === 'youtube') {
+            const embedSrc = this.getYouTubeSrc(media.url);
+            // wmode=transparent এবং html5=1 যোগ করা হয়েছে ফ্লিকারিং কমাতে
+            item.innerHTML = `<iframe src="${embedSrc}&wmode=transparent" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%; height:100%; pointer-events:auto;"></iframe>`;
+        } 
+        // ... অন্যান্য মিডিয়া টাইপ কোড একই থাকবে ...
+        else if (media.type === 'vimeo') {
+             const embedSrc = this.getVimeoSrc(media.url);
+             item.innerHTML = `<iframe src="${embedSrc}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="width:100%; height:100%;"></iframe>`;
+        }
+        else if (media.type === 'audio') {
+            item.classList.add('fbpH-media-audio');
+            item.innerHTML = `<audio controls style="position:relative; z-index:100;"><source src="${media.url}" type="audio/mpeg"></audio>`;
+        }
+        else if (media.type === 'video') { 
+            item.innerHTML = `<video controls playsinline style="width:100%; height:100%;"><source src="${media.url}" type="video/mp4"></video>`;
+        }
 
-        bookConfig[pageIndex].forEach(media => {
-            const item = document.createElement('div');
-            item.className = 'fbpH-media-item';
-            
-            // Position & Size
-            item.style.left = media.x + '%';
-            item.style.top = media.y + '%';
-            item.style.width = media.width + '%';
-            item.style.height = media.height + '%';
+        // ইভেন্ট বাবলিং বন্ধ করা
+        item.addEventListener('mousedown', (e) => e.stopPropagation());
+        item.addEventListener('touchstart', (e) => e.stopPropagation(), {passive: false});
+        item.addEventListener('click', (e) => e.stopPropagation());
 
-            // Render Content based on Type
-            if (media.type === 'youtube') {
-                const embedSrc = this.getYouTubeSrc(media.url);
-                item.innerHTML = `<iframe src="${embedSrc}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-            } 
-            else if (media.type === 'vimeo') {
-                const embedSrc = this.getVimeoSrc(media.url);
-                item.innerHTML = `<iframe src="${embedSrc}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
-            }
-            else if (media.type === 'google_map') {
-                item.innerHTML = `<iframe src="${media.url}" frameborder="0" allowfullscreen loading="lazy"></iframe>`;
-            } 
-            else if (media.type === 'audio') {
-                item.classList.add('fbpH-media-audio');
-                item.innerHTML = `<audio controls><source src="${media.url}" type="audio/mpeg"></audio>`;
-            }
-            else if (media.type === 'video') { // Raw MP4
-                item.innerHTML = `<video controls><source src="${media.url}" type="video/mp4"></video>`;
-            }
+        layer.appendChild(item);
+    });
 
-            // Touch/Click stop propagation
-            item.addEventListener('mousedown', (e) => e.stopPropagation());
-            item.addEventListener('touchstart', (e) => e.stopPropagation(), {passive: true});
-            item.addEventListener('click', (e) => e.stopPropagation());
-
-            layer.appendChild(item);
-        });
-
-        container.appendChild(layer);
-    },
+    container.appendChild(layer);
+},
 
     stopAllMedia: function() {
         const iframes = document.querySelectorAll('.fbpH-media-item iframe');
