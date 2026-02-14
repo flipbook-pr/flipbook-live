@@ -229,79 +229,155 @@ function renderLibrary() {
             updateZoom();
         }, { passive: false });
 
-        bookStage.addEventListener('mousedown', (e) => {
-            // Check for exclusions (Links, Hotspots, Modal)
-            if (e.target.tagName === 'A' || e.target.closest('.linkAnnotation') || e.target.closest('.fbpH-hotspot-dot') || e.target.closest('.fbpH-product-modal')) { 
-                isDragging = false; 
+
+
+// ✅ এই নতুন কোডটুকু বসান ✅
+
+        // ১. মাউস ও টাচ পজিশন বের করার ফাংশন
+        function getPointerPosition(e) {
+            if (e.touches && e.touches.length > 0) {
+                return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            }
+            return { x: e.clientX, y: e.clientY };
+        }
+
+        // ২. ড্র্যাগ শুরু (MouseDown / TouchStart)
+        function handleDragStart(e) {
+            // বাটন বা লিংকে টাচ করলে ড্র্যাগ হবে না
+            if (e.target.tagName === 'A' || 
+                e.target.closest('.linkAnnotation') || 
+                e.target.closest('.fbpH-hotspot-dot') || 
+                e.target.closest('.fbpH-product-modal') ||
+                e.target.closest('.fbpH-controls') || 
+                e.target.closest('.fbpH-arrow')) { 
                 return; 
             }
 
-            if (e.target.closest('.textLayer > span')) {
-                isDragging = false;
-                return;
+            // টেক্সট সিলেকশন আটকাতে
+            if (e.target.closest('.textLayer > span')) { 
+                // টেক্সট কপি করার জন্য অনুমতি দিতে চাইলে নিচের লাইনটি কমেন্ট করে রাখুন
+                // return; 
             }
 
             isDragging = true; 
             bookStage.classList.add('fbpH-grabbing-mode'); 
 
-            clickStartX = e.clientX; clickStartY = e.clientY;
-            startX = e.clientX - translateX; startY = e.clientY - translateY;
-            lastMoveX = e.clientX; lastMoveY = e.clientY; velocityX = 0; velocityY = 0;
+            const pos = getPointerPosition(e);
+            clickStartX = pos.x; 
+            clickStartY = pos.y;
+            
+            startX = pos.x - translateX; 
+            startY = pos.y - translateY;
+            
+            lastMoveX = pos.x; 
+            lastMoveY = pos.y; 
+            velocityX = 0; 
+            velocityY = 0;
+            
             zoomLayer.classList.add('no-transition'); 
             
-            updateZoom();
-        });
+            // টাচ ডিভাইসে স্ক্রল বন্ধ করা (যদি জুম করা থাকে)
+            if(e.type === 'touchstart' && currentZoom > minZoom) {
+               // e.preventDefault(); // প্রয়োজনে এটি অন করতে পারেন
+            }
+        }
 
-        bookStage.addEventListener('mousemove', (e) => {
-            const selection = window.getSelection();
-            if (selection && selection.toString().length > 0) { 
-                isDragging = false;
-                bookStage.classList.remove('fbpH-grabbing-mode'); 
-                return; 
+        // ৩. ড্র্যাগ করা (MouseMove / TouchMove)
+        function handleDragMove(e) {
+            if (!isDragging) return;
+
+            // মোবাইলে ডিফল্ট স্ক্রল বন্ধ করা যাতে বই মুভ করা যায়
+            if (e.cancelable && (currentZoom > minZoom || isDragging)) {
+                e.preventDefault(); 
             }
 
-            if (!isDragging || currentZoom <= minZoom + 0.01) return; 
-            e.preventDefault();
             if (!animationFrameId) {
                 animationFrameId = requestAnimationFrame(() => {
-                    velocityX = e.clientX - lastMoveX; velocityY = e.clientY - lastMoveY;
-                    lastMoveX = e.clientX; lastMoveY = e.clientY;
-                    translateX = e.clientX - startX; translateY = e.clientY - startY; 
-                    updateZoom(); animationFrameId = null;
+                    const pos = getPointerPosition(e);
+
+                    velocityX = pos.x - lastMoveX; 
+                    velocityY = pos.y - lastMoveY;
+                    lastMoveX = pos.x; 
+                    lastMoveY = pos.y;
+                    
+                    translateX = pos.x - startX; 
+                    translateY = pos.y - startY; 
+                    
+                    updateZoom(); 
+                    animationFrameId = null;
                 });
             }
-        });
+        }
 
-        bookStage.addEventListener('mouseup', (e) => {
+        // ৪. ড্র্যাগ শেষ (MouseUp / TouchEnd)
+        function handleDragEnd(e) {
+            if (!isDragging) return;
+            
             isDragging = false; 
             bookStage.classList.remove('fbpH-grabbing-mode');
             
-            if (animationFrameId) cancelAnimationFrame(animationFrameId); animationFrameId = null;
+            if (animationFrameId) cancelAnimationFrame(animationFrameId); 
+            animationFrameId = null;
             zoomLayer.classList.remove('no-transition'); 
             
-            const moveDist = Math.sqrt(Math.pow(e.clientX - clickStartX, 2) + Math.pow(e.clientY - clickStartY, 2));
+            // ক্লিক নাকি ড্র্যাগ ছিল তা চেক করা
+            // TouchEnd এ clientX থাকে না, তাই lastMoveX ব্যবহার করা হলো
+            const endX = (e.changedTouches && e.changedTouches.length > 0) ? e.changedTouches[0].clientX : lastMoveX;
+            const endY = (e.changedTouches && e.changedTouches.length > 0) ? e.changedTouches[0].clientY : lastMoveY;
+
+            const moveDist = Math.sqrt(Math.pow(endX - clickStartX, 2) + Math.pow(endY - clickStartY, 2));
             
-            if (moveDist < 5) { 
+            if (moveDist < 10) { 
                 handleBookClick(e); 
             } else {
-                translateX += velocityX * 12; translateY += velocityY * 12;
+                // মোমেন্টাম ইফেক্ট (Momentum)
+                translateX += velocityX * 12; 
+                translateY += velocityY * 12;
+                
+                // বাউন্ডারি চেক (বই স্ক্রিনের বাইরে না যাওয়া)
                 const stageW = bookStage.clientWidth; const stageH = bookStage.clientHeight;
                 const bookTotalW = (PAGE_WIDTH * 2) * currentZoom;
                 const bookTotalH = (PAGE_HEIGHT) * currentZoom;
-                let maxPanX = (bookTotalW - stageW) / 2; let maxPanY = (bookTotalH - stageH) / 2;
-                if (maxPanX < 0) maxPanX = 0; if (maxPanY < 0) maxPanY = 0;
-                if (translateX > maxPanX) translateX = maxPanX; else if (translateX < -maxPanX) translateX = -maxPanX;
-                if (translateY > maxPanY) translateY = maxPanY; else if (translateY < -maxPanY) translateY = -maxPanY;
+                
+                let maxPanX = (bookTotalW - stageW) / 2; 
+                let maxPanY = (bookTotalH - stageH) / 2;
+                
+                if (maxPanX < 0) maxPanX = 0; 
+                if (maxPanY < 0) maxPanY = 0;
+                
+                if (translateX > maxPanX) translateX = maxPanX; 
+                else if (translateX < -maxPanX) translateX = -maxPanX;
+                
+                if (translateY > maxPanY) translateY = maxPanY; 
+                else if (translateY < -maxPanY) translateY = -maxPanY;
+                
                 updateZoom();
             }
+        }
+
+        // ৫. ইভেন্ট লিসেনার যুক্ত করা (মাউস + টাচ)
+        bookStage.addEventListener('mousedown', handleDragStart);
+        bookStage.addEventListener('touchstart', handleDragStart, { passive: false });
+
+        // উইন্ডোতে ইভেন্ট দেওয়া হয়েছে যাতে মাউস বাইরে গেলেও কাজ করে
+        window.addEventListener('mousemove', handleDragMove);
+        window.addEventListener('touchmove', handleDragMove, { passive: false });
+
+        window.addEventListener('mouseup', handleDragEnd);
+        window.addEventListener('touchend', handleDragEnd);
+        
+        // মাউস স্টেজ থেকে বেরিয়ে গেলে সেফটি চেক
+        bookStage.addEventListener('mouseleave', () => { 
+           if(isDragging && !('ontouchstart' in window)) { // শুধুমাত্র ডেস্কটপের জন্য
+               isDragging = false;
+               bookStage.classList.remove('fbpH-grabbing-mode');
+               zoomLayer.classList.remove('no-transition');
+           }
         });
 
-        bookStage.addEventListener('mouseleave', () => { 
-            isDragging = false; 
-            bookStage.classList.remove('fbpH-grabbing-mode'); 
-            zoomLayer.classList.remove('no-transition'); 
-            updateZoom(); 
-        });
+
+
+
 
         function handleBookClick(e) {
             if (e.target.closest('.fbpH-controls') || e.target.closest('.fbpH-sidebar') || e.target.closest('.fbpH-search-panel') || e.target.closest('.fbpH-arrow')) return;
