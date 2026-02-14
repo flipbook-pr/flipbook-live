@@ -84,7 +84,7 @@ const HotspotManager = {
     masterConfig: {
         
         // 📘 Catalog 1: Summer Collection
-        "Furniture": {
+        "Business": {
             2: [ // Page 2 (Index starts at 0, so actually 3rd page if cover exists)
                 { x: 30, y: 40, title: "Vintage Watch", price: "$120.00", img: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=300", link: "#" },
                 { x: 70, y: 60, title: "Leather Bag", price: "$85.50", img: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=300", link: "#" }
