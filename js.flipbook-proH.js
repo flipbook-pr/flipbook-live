@@ -179,40 +179,19 @@ function renderLibrary() {
             searchInput.value = '';
         }
 
-function autoResizeBook() {
+        function autoResizeBook() {
             if (window.getComputedStyle(popup).display === 'none') return;
-
-            const stageW = bookStage.clientWidth;
-            const stageH = bookStage.clientHeight;
-            
-            // মোবাইল চেক
-            const isMobile = window.innerWidth < 768;
-            
-            // মোবাইলে সিঙ্গেল পেজ, ডেস্কটপে ডাবল পেজ হিসাব
-            const baseWidth = isMobile ? PAGE_WIDTH : (PAGE_WIDTH * 2);
+            const availableHeight = bookStage.clientHeight;
+            const availableWidth = bookStage.clientWidth;
+            const baseWidth = PAGE_WIDTH * 2;
             const baseHeight = PAGE_HEIGHT;
-
-            // রেশিও বের করা
-            const scaleX = stageW / baseWidth;
-            const scaleY = stageH / baseHeight;
-
-            // স্ক্রিনে ফিট করার জন্য স্কেল নির্ধারণ (একটু মার্জিন রাখা হলো ০.৯৫)
-            let scaleToFit = Math.min(scaleX, scaleY) * 0.90; 
-
-            minZoom = scaleToFit; 
-            currentZoom = scaleToFit;
-
-            // একদম মাঝখানে সেট করা
-            translateX = 0; 
-            translateY = 0; 
-            
-            // জুম ডিরেকশন রিসেট
-            zoomDirection = 1; 
-            
+            const scaleX = availableWidth / baseWidth;
+            const scaleY = availableHeight / baseHeight;
+            let scaleToFit = Math.min(scaleX, scaleY);
+            scaleToFit = scaleToFit * 0.96; 
+            minZoom = scaleToFit; currentZoom = scaleToFit;
+            translateX = 0; translateY = 0; zoomDirection = 1; 
             updateZoom();
-            
-            // লাইব্রেরি আপডেট করা যাতে সাইজ রি-ক্যালকুলেট হয়
-            if(pageFlip) pageFlip.updateFromHtml(document.querySelectorAll('.fbpH-page'));
         }
         window.addEventListener('resize', autoResizeBook);
 
@@ -250,16 +229,8 @@ function autoResizeBook() {
             updateZoom();
         }, { passive: false });
 
-
-
-bookStage.addEventListener('mousedown', (e) => {
-            // যদি জুম করা না থাকে (ফিট টু স্ক্রিন থাকে), তবে ড্র্যাগ বন্ধ রাখুন
-            // যাতে পেজ ফ্লিপ করা যায়।
-            if (currentZoom <= minZoom + 0.05) {
-                 isDragging = false;
-                 return;
-            }
-
+        bookStage.addEventListener('mousedown', (e) => {
+            // Check for exclusions (Links, Hotspots, Modal)
             if (e.target.tagName === 'A' || e.target.closest('.linkAnnotation') || e.target.closest('.fbpH-hotspot-dot') || e.target.closest('.fbpH-product-modal')) { 
                 isDragging = false; 
                 return; 
@@ -277,6 +248,8 @@ bookStage.addEventListener('mousedown', (e) => {
             startX = e.clientX - translateX; startY = e.clientY - translateY;
             lastMoveX = e.clientX; lastMoveY = e.clientY; velocityX = 0; velocityY = 0;
             zoomLayer.classList.add('no-transition'); 
+            
+            updateZoom();
         });
 
         bookStage.addEventListener('mousemove', (e) => {
@@ -330,10 +303,6 @@ bookStage.addEventListener('mousedown', (e) => {
             updateZoom(); 
         });
 
-
-
-
-
         function handleBookClick(e) {
             if (e.target.closest('.fbpH-controls') || e.target.closest('.fbpH-sidebar') || e.target.closest('.fbpH-search-panel') || e.target.closest('.fbpH-arrow')) return;
             if (e.target.tagName === 'A' || e.target.closest('.linkAnnotation') || e.target.closest('.fbpH-hotspot-dot') || e.target.closest('.fbpH-product-modal')) return;
@@ -353,35 +322,23 @@ bookStage.addEventListener('mousedown', (e) => {
         document.getElementById('fbpH-btn-zoom-out').addEventListener('click', () => { if (currentZoom > minZoom) { currentZoom -= 0.25; if (currentZoom < minZoom) currentZoom = minZoom; if(currentZoom <= minZoom) zoomDirection = 1; updateZoom(); } });
 
         // --- CORE PAGEFLIP ---
-function initFlipBook() {
-            // যদি আগে কোনো ইন্সট্যান্স থাকে, ধ্বংস করুন
-            if (pageFlip) { try { pageFlip.destroy(); } catch(e) {} }
-
+        function initFlipBook() {
             pageFlip = new St.PageFlip(bookElement, {
-                width: PAGE_WIDTH, 
-                height: PAGE_HEIGHT,
-                size: 'stretch',      // 'fixed' এর বদলে 'stretch' দিলে রেসপন্সিভ ভালো হয়
-                minWidth: 300, 
-                maxWidth: 10000, 
-                minHeight: 400, 
-                maxHeight: 10000,
-                showCover: true, 
-                usePortrait: true,    // মোবাইলে অটোমেটিক সিঙ্গেল পেজ হবে
-                flippingTime: 800, 
-                useMouseEvents: true, // 🔥 এটি TRUE করতে হবে, নাহলে টাচ কাজ করবে না
-                swipeDistance: 30,    // অল্প সোয়াইপেও পেজ উল্টাবে
-                mobileScrollSupport: false // বইয়ের ওপর টাচ করলে পেজ স্ক্রল হবে না, শুধু ফ্লিপ হবে
+                width: PAGE_WIDTH, height: PAGE_HEIGHT,
+                size: 'fixed', minWidth: 200, maxWidth: 8000, minHeight: 300, maxHeight: 8000,
+                showCover: true, usePortrait: false, flippingTime: 800, 
+                useMouseEvents: false, maxShadowOpacity: 0.3
             });
             
             pageFlip.on('flip', (e) => { 
                 updatePageInfo(); 
                 playSound(); 
                 checkBookmarkIcon(); 
-                // updateZoom(); // ফ্লিপ করার সময় জুম রিসেট না করাই ভালো
+                updateZoom();
                 manageMemoryAndRender(e.data);
                 
+                // 🔥 Close Modals on Flip via Manager
                 if(typeof HotspotManager !== 'undefined') HotspotManager.closeAllModals();
-                if(typeof MediaManager !== 'undefined') MediaManager.stopAllMedia();
             });
             
             setTimeout(() => {
