@@ -71,11 +71,25 @@
 
         /* --- Popup Overlay --- */
         .fbpH-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; 
+			
+    /* আগে height: 100% বা 100vh ছিল, সেটি বদলে নিচের ৩টি লাইন দিন */
+    height: 100%; 
+    height: 100vh; 
+    height: 100dvh; /* এটি অ্যাড্রেস বার লাফালাফি ইগনোর করে */
+
+
+			
             background: var(--fbpH-overlay-bg); 
             backdrop-filter: blur(8px);
             z-index: 9999;
             display: none; flex-direction: column; opacity: 0; transition: opacity 0.5s ease;
+
+
+    /* মোবাইলে বাউন্স এফেক্ট বন্ধ করতে */
+    overflow: hidden; 
+    overscroll-behavior: none;
+			
         }
         .fbpH-overlay.active { opacity: 1; }
 
@@ -174,7 +188,10 @@
 
         /* --- Controls --- */
         .fbpH-controls {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: var(--fbpH-footer-h); 
+            position: absolute; bottom: 0; left: 0; width: 100%; 
+			
+			height: auto; 
+			min-height: var(--fbpH-footer-h);
             background: rgba(15, 15, 15, 0.95); border-top: 1px solid #333;
             display: flex; align-items: center; justify-content: center; gap: 15px; 
             z-index: 10005; 
