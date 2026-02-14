@@ -399,3 +399,56 @@
     -webkit-transform-style: preserve-3d !important;
     will-change: transform; /* ব্রাউজারকে আগে থেকেই প্রস্তুত রাখা */
 }
+
+
+/* ১. পেজের ৩ডি স্পেস ঠিক করা */
+.fbpH-page {
+    transform-style: preserve-3d !important;
+    -webkit-transform-style: preserve-3d !important;
+}
+
+/* ২. মিডিয়া এবং হটস্পট লেয়ারকে পেজ থেকে একটু উপরে তোলা */
+.fbpH-media-layer, 
+.fbpH-hotspot-layer {
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    
+    /* ✅ আসল ম্যাজিক: লেয়ারটিকে পেজ থেকে ১ পিক্সেল সামনে আনা */
+    transform: translateZ(1px); 
+    -webkit-transform: translateZ(1px); 
+    
+    z-index: 500; /* ক্যানভাসের অনেক উপরে */
+    pointer-events: none; /* যাতে টাচ ইভেন্ট ঠিক থাকে */
+}
+
+/* ৩. অডিও/ভিডিও বা হটস্পট আইটেমগুলো ফিক্স করা */
+.fbpH-media-item, 
+.fbpH-hotspot-dot {
+    position: absolute;
+    
+    /* হার্ডওয়্যার এক্সিলারেশন এবং পজিশন লক */
+    transform: translate3d(0, 0, 1px) !important; 
+    -webkit-transform: translate3d(0, 0, 1px) !important;
+    
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    
+    z-index: 1000; /* সবার উপরে */
+    pointer-events: auto; /* ক্লিক বা টাচ কাজ করবে */
+    
+    /* মোবাইলে বর্ডার ফেটে যাওয়া বা কাঁপা বন্ধ করতে */
+    outline: 1px solid transparent; 
+    box-shadow: 0 0 1px rgba(0,0,0,0); 
+}
+
+/* ৪. অডিও প্লেয়ারের ভেতরে স্পেসিফিক ফিক্স */
+.fbpH-media-item audio,
+.fbpH-media-item video,
+.fbpH-media-item iframe {
+    /* মিডিয়া প্লেয়ার যেন লেয়ারের সাথে লেগে থাকে */
+    transform: translateZ(0); 
+    will-change: transform;
+}
