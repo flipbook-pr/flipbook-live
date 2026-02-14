@@ -45,7 +45,7 @@
         /* --- Library Grid --- */
         .fbpH-library-title {
             font-family: var(--fbpH-text-bn); font-size: 22px; margin-bottom: 20px; 
-            border-bottom: 2px solid var(--fbpH-accent); padding-bottom: 5px; display: inline-block;
+            border-bottom: 2px solid var(--fbpH-dark); padding-bottom: 5px; display: inline-block;
         }
         .fbpH-library-grid {
             display: flex; flex-wrap: wrap; justify-content: center; gap: 25px;
@@ -66,30 +66,16 @@
             margin-top: 10px; font-size: 14px; font-weight: 500; color: #ccc;
             font-family: var(--fbpH-text-bn); text-shadow: 0 2px 5px rgba(0,0,0,0.8);
         }
-        .fbpH-book-card:hover .fbpH-book-cover { border-color: var(--fbpH-accent); }
+        .fbpH-book-card:hover .fbpH-book-cover { border-color:rgba(255,255,255); }
         .fbpH-book-card:hover .fbpH-book-title { color: #fff; }
 
         /* --- Popup Overlay --- */
         .fbpH-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; 
-			
-    /* আগে height: 100% বা 100vh ছিল, সেটি বদলে নিচের ৩টি লাইন দিন */
-    height: 100%; 
-    height: 100vh; 
-    height: 100dvh; /* এটি অ্যাড্রেস বার লাফালাফি ইগনোর করে */
-
-
-			
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--fbpH-overlay-bg); 
             backdrop-filter: blur(8px);
             z-index: 9999;
             display: none; flex-direction: column; opacity: 0; transition: opacity 0.5s ease;
-
-
-    /* মোবাইলে বাউন্স এফেক্ট বন্ধ করতে */
-    overflow: hidden; 
-    overscroll-behavior: none;
-			
         }
         .fbpH-overlay.active { opacity: 1; }
 
@@ -99,14 +85,6 @@
             z-index: 10005; transition: 0.3s;
             background: rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-
-
-    z-index: 2147483647; /* সর্বোচ্চ মান */
-    transform: translateZ(1000px);
-    -webkit-transform: translateZ(1000px);
-
-
-			
         }
         .fbpH-close-btn:hover { background: #c0392b; transform: rotate(90deg); }
 
@@ -176,11 +154,6 @@
             cursor: grab;
             user-select: text !important;
             -webkit-user-select: text !important;
-
-    touch-action: none; /* এটি ব্রাউজারের ডিফল্ট স্ক্রলিং বন্ধ করে আপনার স্ক্রিপ্টকে কাজ করতে দেবে */
-    -webkit-user-drag: none;
-	    contain: layout size; /* ব্রাউজারকে স্ট্রিক্ট রেন্ডারিং করতে বলে */
-    z-index: 1;		
         }
         .fbpH-stage.grabbing { cursor: grabbing !important; }
 
@@ -197,17 +170,12 @@
 
         /* --- Controls --- */
         .fbpH-controls {
-            position: absolute; bottom: 0; left: 0; width: 100%; 
-			
-			height: auto; 
-			min-height: var(--fbpH-footer-h);
+            position: absolute; bottom: 0; left: 0; width: 100%; height: var(--fbpH-footer-h); 
             background: rgba(15, 15, 15, 0.95); border-top: 1px solid #333;
             display: flex; align-items: center; justify-content: center; gap: 15px; 
-    z-index: 2147483647; /* সর্বোচ্চ মান */
-    transform: translateZ(1000px); /* বইয়ের চেয়ে অনেক উপরে আনা */
-    -webkit-transform: translateZ(1000px);
-    
-    margin: 0; padding: 0;
+            z-index: 10005; 
+            transform: translateY(100%); transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            margin: 0; padding: 0;
         }
         .fbpH-controls.active { transform: translateY(0); }
 
@@ -236,12 +204,6 @@
             font-size: 40px; cursor: pointer; z-index: 10003;
             transition: all 0.3s ease; user-select: none;
             background: rgba(0,0,0,0.0); border-radius: 10px;
-
-
-    z-index: 2147483647;
-    transform: translateY(-50%) translateZ(1000px); /* 3D ফিক্স */
-    -webkit-transform: translateY(-50%) translateZ(1000px);
-			
         }
         .fbpH-arrow:hover { 
             background: rgba(0,0,0,0.3); color: var(--fbpH-accent); 
@@ -264,9 +226,6 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 11000;
             display: none; flex-direction: column; justify-content: center; align-items: center;
-
-    z-index: 2147483647 !important;
-    transform: translateZ(2000px); /* সবকিছুর উপরে */			
         }
         .fbpH-loader {
             width: 50px; height: 50px; border: 4px solid #333; border-top-color: var(--fbpH-accent);
@@ -280,9 +239,6 @@
             padding: 10px 25px; border-radius: 5px; opacity: 0; transition: 0.4s; z-index: 12000;
             font-family: var(--fbpH-text-bn); font-weight: 700; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             pointer-events: none;
-
-	    z-index: 2147483647 !important;
-    transform: translateZ(2000px); /* সবকিছুর উপরে */		
         }
         .fbpH-toast.show { opacity: 1; transform: translateY(10px); }
 
@@ -347,108 +303,4 @@
     border-radius: 2px;
     box-shadow: 0 0 2px rgba(0,0,0,0.2);
     cursor: pointer;
-}
-
-
-
-
-
-
-/* ==================================================
-   🔥 MOBILE FLICKERING FIX (ULTIMATE) - PART 1
-   ================================================== */
-
-/* 1. স্টেজকে 3D স্পেস ধরে রাখতে বাধ্য করা */
-.fbpH-stage {
-    transform-style: preserve-3d !important;
-    -webkit-transform-style: preserve-3d !important;
-    z-index: 1;
-}
-
-/* 2. বইয়ের পেজের ক্যানভাস ফিক্স */
-.fbpH-page canvas {
-    /* ক্যানভাসকে পেজের ব্যাকগ্রাউন্ড থেকে একটু উপরে তোলা */
-    transform: translateZ(1px); 
-    -webkit-transform: translateZ(1px);
-}
-
-/* 3. কন্ট্রোল বাটন এবং UI ফিক্স (এগুলোকে 3D জগত থেকে সম্পূর্ণ আলাদা করা) */
-.fbpH-controls, 
-.fbpH-arrow, 
-.fbpH-close-btn, 
-.fbpH-toast, 
-.fbpH-loader-container {
-    /* হার্ডওয়্যার অ্যাক্সিলারেশন অন করা */
-    transform: translate3d(0, 0, 0) !important;
-    -webkit-transform: translate3d(0, 0, 0) !important;
-    
-    /* Z-Index অনেক বাড়িয়ে দেয়া */
-    z-index: 2147483647 !important; 
-    
-    /* ফ্লিকারিং বন্ধ করতে ব্যাকফেস লুকানো */
-    backface-visibility: hidden !important;
-    -webkit-backface-visibility: hidden !important;
-    
-    /* টাচ ইভেন্ট স্মুথ করা */
-    perspective: 1000px;
-}
-
-/* 4. লাইব্রেরির ইন্টারনাল ক্লাস ফিক্স (অত্যন্ত জরুরি) */
-.stf__item, .stf__block {
-    transform-style: preserve-3d !important;
-    -webkit-transform-style: preserve-3d !important;
-    will-change: transform; /* ব্রাউজারকে আগে থেকেই প্রস্তুত রাখা */
-}
-
-
-/* ১. পেজের ৩ডি স্পেস ঠিক করা */
-.fbpH-page {
-    transform-style: preserve-3d !important;
-    -webkit-transform-style: preserve-3d !important;
-}
-
-/* ২. মিডিয়া এবং হটস্পট লেয়ারকে পেজ থেকে একটু উপরে তোলা */
-.fbpH-media-layer, 
-.fbpH-hotspot-layer {
-    position: absolute;
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%;
-    
-    /* ✅ আসল ম্যাজিক: লেয়ারটিকে পেজ থেকে ১ পিক্সেল সামনে আনা */
-    transform: translateZ(1px); 
-    -webkit-transform: translateZ(1px); 
-    
-    z-index: 500; /* ক্যানভাসের অনেক উপরে */
-    pointer-events: none; /* যাতে টাচ ইভেন্ট ঠিক থাকে */
-}
-
-/* ৩. অডিও/ভিডিও বা হটস্পট আইটেমগুলো ফিক্স করা */
-.fbpH-media-item, 
-.fbpH-hotspot-dot {
-    position: absolute;
-    
-    /* হার্ডওয়্যার এক্সিলারেশন এবং পজিশন লক */
-    transform: translate3d(0, 0, 1px) !important; 
-    -webkit-transform: translate3d(0, 0, 1px) !important;
-    
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    
-    z-index: 1000; /* সবার উপরে */
-    pointer-events: auto; /* ক্লিক বা টাচ কাজ করবে */
-    
-    /* মোবাইলে বর্ডার ফেটে যাওয়া বা কাঁপা বন্ধ করতে */
-    outline: 1px solid transparent; 
-    box-shadow: 0 0 1px rgba(0,0,0,0); 
-}
-
-/* ৪. অডিও প্লেয়ারের ভেতরে স্পেসিফিক ফিক্স */
-.fbpH-media-item audio,
-.fbpH-media-item video,
-.fbpH-media-item iframe {
-    /* মিডিয়া প্লেয়ার যেন লেয়ারের সাথে লেগে থাকে */
-    transform: translateZ(0); 
-    will-change: transform;
 }
