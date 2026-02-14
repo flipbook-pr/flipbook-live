@@ -304,3 +304,87 @@
     box-shadow: 0 0 2px rgba(0,0,0,0.2);
     cursor: pointer;
 }
+
+
+
+
+
+
+/* =========================================
+   FIX: MOBILE LAYERING & FLOATING ISSUE
+   ========================================= */
+
+/* 1. পেজ কন্টেইনারকে 3D স্পেস ফিক্স করা */
+.fbpH-page { 
+    background-color: #ffffff; 
+    overflow: hidden; 
+    display: block; /* Flex এর বদলে Block ব্যবহার করুন মোবাইলের জন্য ভালো */
+    position: relative; 
+    
+    /* Hardware Acceleration Force করা */
+    transform: translate3d(0, 0, 0); 
+    -webkit-transform: translate3d(0, 0, 0);
+    
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    
+    /* Child elements যেন পেজের সাথে লেগে থাকে */
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    
+    will-change: transform; 
+}
+
+/* 2. মিডিয়া এবং হটস্পট লেয়ার ফিক্স */
+.fbpH-media-layer,
+.fbpH-hotspot-layer {
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    
+    /* পেজের সাথে মিশিয়ে রাখার জন্য */
+    transform: translateZ(0); 
+    -webkit-transform: translateZ(0);
+    
+    /* যাতে ফ্লিপ করার সময় পেজের বাইরে না যায় */
+    overflow: hidden; 
+}
+
+/* 3. Z-Index ঠিক করা (যেন ক্যানভাস বা টেক্সটের নিচে না পড়ে যায়) */
+.fbpH-page canvas { z-index: 1; }
+.textLayer { z-index: 5; }
+.fbpH-media-layer { z-index: 10; pointer-events: none; } /* মিডিয়া লেয়ার */
+.fbpH-hotspot-layer { z-index: 20; pointer-events: none; } /* হটস্পট লেয়ার */
+
+/* মিডিয়া আইটেম এবং ডট গুলোতে ক্লিক এনাবল করা */
+.fbpH-media-item, 
+.fbpH-hotspot-dot {
+    pointer-events: auto !important;
+    transform: translateZ(1px); /* সামান্য উপরে উঠিয়ে রাখা যেন ডুবে না যায় */
+}
+
+
+/* 4. 🔥 CRITICAL FIX: ফ্লিপ করার সময় লেয়ার লুকিয়ে ফেলা 🔥
+   যখন পেজ উল্টানো হয় (Folding/Turning), তখন মিডিয়া/বাটন ভেসে থাকে। 
+   তাই ফ্লিপ করার সময় এগুলো হাইড করে দিতে হবে।
+*/
+
+.stf__item.-folding .fbpH-hotspot-layer,
+.stf__item.-turning .fbpH-hotspot-layer,
+.stf__item.-folding .fbpH-media-layer,
+.stf__item.-turning .fbpH-media-layer,
+.stf__item.-folding .textLayer, 
+.stf__item.-turning .textLayer { 
+    display: none !important; 
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+/* 5. Mobile Zoom Fix */
+.fbpH-zoom-layer {
+    /* জুম করার সময় ব্লার হওয়া আটকাবে */
+    backface-visibility: hidden;
+    transform: translateZ(0);
+}
