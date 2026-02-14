@@ -5,12 +5,6 @@
 .fbpH-hotspot-layer {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     z-index: 200; pointer-events: none;
-
-
-    /* এই লাইনটি জাদুর মতো কাজ করবে */
-    transform: translateZ(2px); 
-    -webkit-transform: translateZ(2px);
-   
 }
 
 .fbpH-hotspot-dot {
@@ -22,16 +16,10 @@
     animation: pulse-ring 2s infinite;
     display: flex; align-items: center; justify-content: center;
     color: #111; font-size: 24px; font-weight: bold; transform: translate(-50%, -50%);
-
-
-       transform: translate(-50%, -50%) translateZ(10px); 
-    -webkit-transform: translate(-50%, -50%) translateZ(10px);
-    will-change: transform;
 }
 
 .fbpH-hotspot-dot:hover { 
-    transform: translate(-50%, -50%) translateZ(10px) scale(1.2); 
-    -webkit-transform: translate(-50%, -50%) translateZ(10px) scale(1.2);
+    transform: translate(-50%, -50%) scale(1.2); 
     background: #fff; border-color: var(--fbpH-accent, #f1c40f);
 }
 
@@ -53,14 +41,6 @@
     text-align: left;
     pointer-events: auto;
     font-family: 'Poppins', sans-serif;
-
-
-
-       z-index: 2147483647; /* মডাল সবার উপরে থাকবে */
-    
-    /* মডালটি বইয়ের পেজের 3D জগত থেকে বের করে আনা */
-    transform: translate(-50%, -110%) translateZ(50px);
-    -webkit-transform: translate(-50%, -110%) translateZ(50px);
 }
 
 @keyframes popIn { 
@@ -177,12 +157,6 @@
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     z-index: 150; /* Hotspot এর নিচে কিন্তু Text এর উপরে */
     pointer-events: none; /* যাতে পেজের অন্য জায়গায় ক্লিক করা যায় */
-
-
-  /* মিডিয়া লেয়ারকেও ভাসিয়ে রাখা */
-    transform: translateZ(2px);
-    -webkit-transform: translateZ(2px);
-   
 }
 
 .fbpH-media-item {
@@ -213,72 +187,4 @@
 }
 .fbpH-media-audio audio {
     width: 90%; height: 30px; outline: none;
-}
-
-
-
-
-
-
-
-
-/* ==================================================
-   🔥 MOBILE FLICKERING FIX (ULTIMATE) - PART 2
-   ================================================== */
-
-/* 1. হটস্পট লেয়ারকে পেজ থেকে অনেক দূরে সরানো */
-.fbpH-hotspot-layer {
-    transform-style: preserve-3d !important;
-    -webkit-transform-style: preserve-3d !important;
-    
-    /* আগে 2px ছিল, এখন 50px করে দিচ্ছি যাতে মিশে না যায় */
-    transform: translateZ(20px) !important; 
-    -webkit-transform: translateZ(20px) !important;
-    
-    z-index: 500 !important;
-    pointer-events: none; /* লেয়ারে ক্লিক পড়বে না, শুধু ডটে পড়বে */
-}
-
-/* 2. হটস্পট ডটগুলোকে আলাদা লেয়ারে ফেলা */
-.fbpH-hotspot-dot {
-    /* হার্ডওয়্যার লেয়ার তৈরি করা */
-    transform: translate3d(-50%, -50%, 50px) !important; 
-    -webkit-transform: translate3d(-50%, -50%, 50px) !important;
-    
-    backface-visibility: hidden !important;
-    -webkit-backface-visibility: hidden !important;
-    
-    will-change: transform;
-    z-index: 600 !important;
-    
-    /* শ্যাডো কমিয়ে দেয়া (শ্যাডো অনেক সময় ফ্লিকার করে) */
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8) !important; 
-}
-
-/* 3. মিডিয়া লেয়ার (অডিও/ভিডিও) ফিক্স */
-.fbpH-media-layer {
-    transform-style: preserve-3d !important;
-    
-    /* মিডিয়াকেও পেজ থেকে ভাসিয়ে রাখা */
-    transform: translateZ(15px) !important;
-    -webkit-transform: translateZ(15px) !important;
-    
-    z-index: 400 !important;
-}
-
-/* 4. মিডিয়া আইটেম (ভিডিও প্লেয়ার বক্স) */
-.fbpH-media-item {
-    transform: translateZ(0) !important;
-    -webkit-transform: translateZ(0) !important;
-    backface-visibility: hidden !important;
-}
-
-/* 5. পপআপ মডাল ফিক্স */
-.fbpH-product-modal {
-    /* মডালকে অন্য সব কিছুর উপরে নিয়ে আসা */
-    transform: translate3d(-50%, -110%, 100px) !important;
-    -webkit-transform: translate3d(-50%, -110%, 100px) !important;
-    
-    z-index: 2147483647 !important;
-    filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); /* box-shadow এর বদলে */
 }
