@@ -348,3 +348,64 @@
     box-shadow: 0 0 2px rgba(0,0,0,0.2);
     cursor: pointer;
 }
+
+
+
+
+
+
+/* ১. মিডিয়া এবং হটস্পটের মেইন লেয়ার */
+.fbpH-media-layer, 
+.fbpH-hotspot-layer {
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    z-index: 50; /* ক্যানভাসের উপরে থাকার জন্য */
+    
+    /* থ্রি-ডি স্পেস তৈরি করা */
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    
+    pointer-events: none; /* খালি জায়গায় ক্লিক করলে যেন পেজে লাগে */
+}
+
+/* ২. অডিও, ভিডিও এবং আইকনগুলোর ফিক্স */
+.fbpH-media-item, 
+.fbpH-hotspot-dot, 
+.fbpH-product-modal {
+    position: absolute;
+    
+    /* ✅ ডোবে-ভাসা বন্ধ করার আসল মন্ত্র */
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    
+    /* পেজ উল্টানোর সময় পেছনের অংশ সাদা হওয়া বন্ধ করে */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    
+    /* ব্রাউজারকে আগে থেকেই জানায় যে এটি নড়াচড়া করবে */
+    will-change: transform;
+    
+    /* টাচ এবং ক্লিক এনাবল করা */
+    pointer-events: auto;
+    
+    /* এক্সট্রা স্টেবিলিটি */
+    perspective: 1000px;
+    z-index: 100; 
+}
+
+/* ৩. আইফ্রেম বা ভিডিওর ভেতরের কন্টেন্ট ফিক্স */
+.fbpH-media-item iframe,
+.fbpH-media-item audio,
+.fbpH-media-item video {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+    
+    /* হার্ডওয়্যার এক্সিলারেশন */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+}
