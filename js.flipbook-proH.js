@@ -195,7 +195,23 @@ function renderLibrary() {
             translateX = 0; translateY = 0; zoomDirection = 1; 
             updateZoom();
         }
-        window.addEventListener('resize', autoResizeBook);
+        // =============================================
+// 🛠️ SMART RESIZE (FIX JUMPING ON MOBILE)
+// =============================================
+let lastWindowWidth = window.innerWidth;
+
+window.addEventListener('resize', () => {
+    // বর্তমান প্রস্থ (Width) মাপা
+    const currentWindowWidth = window.innerWidth;
+    
+    // যদি শুধুমাত্র প্রস্থ পরিবর্তন হয় (যেমন: মোবাইল ঘুরলে বা পিসি উইন্ডো ছোট করলে)
+    // তবেই আমরা বুক রিসাইজ করব।
+    // মোবাইলে স্ক্রল করলে শুধু হাইট বদলায়, তখন এই কোডটি রিসাইজ আটকে দেবে।
+    if (currentWindowWidth !== lastWindowWidth) {
+        lastWindowWidth = currentWindowWidth;
+        autoResizeBook();
+    }
+});
 
         // =============================================
         // 🖱️ ZOOM, PAN & SELECTION LOGIC
