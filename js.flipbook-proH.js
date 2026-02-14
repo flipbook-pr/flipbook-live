@@ -252,6 +252,116 @@ function renderLibrary() {
             updateZoom();
         });
 
+
+
+
+// =============================================
+// 📱 MOBILE TOUCH EVENTS SUPPORT (ADD THIS)
+// =============================================
+
+// 1. Touch Start
+bookStage.addEventListener('touchstart', (e) => {
+    // লিংকে টাচ লাগলে ড্র্যাগ হবে না
+    if (e.target.tagName === 'A' || e.target.closest('.linkAnnotation') || e.target.closest('.fbpH-hotspot-dot')) { 
+        isDragging = false; return; 
+    }
+
+    // যদি জুম করা না থাকে (Zoom = 1), তবে ড্র্যাগ হবে না (যাতে পেজ উল্টানো যায়)
+    if (currentZoom <= minZoom + 0.05) {
+        isDragging = false;
+        return;
+    }
+
+    isDragging = true;
+    bookStage.classList.add('fbpH-grabbing-mode');
+    
+    // প্রথম আঙুলের পজিশন নেওয়া
+    const touch = e.touches[0];
+    
+    clickStartX = touch.clientX; 
+    clickStartY = touch.clientY;
+    
+    startX = touch.clientX - translateX; 
+    startY = touch.clientY - translateY;
+    
+    lastMoveX = touch.clientX; 
+    lastMoveY = touch.clientY; 
+    
+    velocityX = 0; velocityY = 0;
+    zoomLayer.classList.add('no-transition');
+}, { passive: false });
+
+// 2. Touch Move
+bookStage.addEventListener('touchmove', (e) => {
+    if (!isDragging) return;
+    
+    // ব্রাউজারের ডিফল্ট স্ক্রল বন্ধ করা (খুব জরুরি)
+    e.preventDefault(); 
+    
+    const touch = e.touches[0];
+    
+    if (!animationFrameId) {
+        animationFrameId = requestAnimationFrame(() => {
+            velocityX = touch.clientX - lastMoveX; 
+            velocityY = touch.clientY - lastMoveY;
+            
+            lastMoveX = touch.clientX; 
+            lastMoveY = touch.clientY;
+            
+            translateX = touch.clientX - startX; 
+            translateY = touch.clientY - startY; 
+            
+            updateZoom(); 
+            animationFrameId = null;
+        });
+    }
+}, { passive: false });
+
+// 3. Touch End
+bookStage.addEventListener('touchend', (e) => {
+    isDragging = false; 
+    bookStage.classList.remove('fbpH-grabbing-mode');
+    
+    if (animationFrameId) cancelAnimationFrame(animationFrameId); 
+    animationFrameId = null;
+    zoomLayer.classList.remove('no-transition'); 
+    
+    // যদি খুব সামান্য মুভমেন্ট হয়, তাহলে সেটিকে 'Click' হিসেবে গণ্য করা হবে (জুম টগলের জন্য)
+    // Touchend ইভেন্টে changedTouches থাকে
+    const touch = e.changedTouches[0];
+    const moveDist = Math.sqrt(Math.pow(touch.clientX - clickStartX, 2) + Math.pow(touch.clientY - clickStartY, 2));
+    
+    if (moveDist < 10) { 
+        // এটি ক্লিক হিসেবে গণ্য হবে
+        // handleBookClick(e) ফাংশনটি ইভেন্ট অবজেক্ট চায়, তাই ফেক ইভেন্ট পাঠানো হলো
+        handleBookClick({ target: e.target, clientX: touch.clientX, clientY: touch.clientY, preventDefault: ()=>{} }); 
+    } else {
+        // মোমেন্টাম ইফেক্ট (হাত ছেড়ে দিলেও একটু গড়িয়ে যাওয়া)
+        translateX += velocityX * 12; 
+        translateY += velocityY * 12;
+        
+        // বাউন্ডারি চেক (বই যেন স্ক্রিনের বাইরে হারিয়ে না যায়)
+        const stageW = bookStage.clientWidth; 
+        const stageH = bookStage.clientHeight;
+        const bookTotalW = (PAGE_WIDTH * 2) * currentZoom;
+        const bookTotalH = (PAGE_HEIGHT) * currentZoom;
+        
+        let maxPanX = (bookTotalW - stageW) / 2; 
+        let maxPanY = (bookTotalH - stageH) / 2;
+        
+        if (maxPanX < 0) maxPanX = 0; 
+        if (maxPanY < 0) maxPanY = 0;
+        
+        if (translateX > maxPanX) translateX = maxPanX; else if (translateX < -maxPanX) translateX = -maxPanX;
+        if (translateY > maxPanY) translateY = maxPanY; else if (translateY < -maxPanY) translateY = -maxPanY;
+        
+        updateZoom();
+    }
+});
+
+
+
+
         bookStage.addEventListener('mousemove', (e) => {
             const selection = window.getSelection();
             if (selection && selection.toString().length > 0) { 
