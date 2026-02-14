@@ -437,7 +437,7 @@ bookStage.addEventListener('touchend', (e) => {
                 width: PAGE_WIDTH, height: PAGE_HEIGHT,
                 size: 'fixed', minWidth: 200, maxWidth: 8000, minHeight: 300, maxHeight: 8000,
                 showCover: true, usePortrait: false, flippingTime: 800, 
-                useMouseEvents: false, maxShadowOpacity: 0.3
+                useMouseEvents: true, maxShadowOpacity: 0.3
             });
             
             pageFlip.on('flip', (e) => { 
