@@ -154,6 +154,10 @@
             cursor: grab;
             user-select: text !important;
             -webkit-user-select: text !important;
+
+    touch-action: none; /* এটি ব্রাউজারের ডিফল্ট স্ক্রলিং বন্ধ করে আপনার স্ক্রিপ্টকে কাজ করতে দেবে */
+    -webkit-user-drag: none;
+			
         }
         .fbpH-stage.grabbing { cursor: grabbing !important; }
 
