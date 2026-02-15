@@ -174,12 +174,19 @@
             background: rgba(15, 15, 15, 0.95); border-top: 1px solid #333;
             display: flex; align-items: center; justify-content: center; gap: 15px; 
             z-index: 10005; 
-            transform: translateY(100%); transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-            margin: 0; padding: 0;
+    /* 🔥 পরিবর্তন: শুরুতে ডিসপ্লে ফিক্স রাখার জন্য */
+    transform: translateY(100%); 
+    will-change: transform; /* ব্রাউজারকে আগে থেকেই রেডি রাখবে */
+    transition: transform 0.3s ease-out; /* স্মুথ কিন্তু ফাস্ট ট্রানজিশন */
+    
+    margin: 0; 
+    padding: 0 15px;
+    box-sizing: border-box; /* প্যাডিং এর কারণে সাইজ যাতে না ভাঙ্গে */
         }
         .fbpH-controls.active { transform: translateY(0); }
 
         .fbpH-btn {
+			    flex-shrink: 0;
             background: transparent; border: none; color: #ccc; 
             font-size: 18px; width: 45px; height: 45px; border-radius: 8px;
             cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;
@@ -307,7 +314,12 @@
 
 
 
-
+/* এই ক্লাসটি JS দিয়ে বডিতে যুক্ত করা হবে যখন বই ওপেন থাকবে */
+body.fbpH-locked {
+    overflow: hidden !important;
+    height: 100vh !important;
+    touch-action: none; /* মোবাইলে টাচ স্ক্রল বন্ধ করবে */
+}
 
 
 
@@ -384,4 +396,34 @@
     .fbpH-controls { padding: 0 10px !important; }
     .fbpH-btn { width: 40px; height: 40px; font-size: 16px; }
     .fbpH-page-info-mobile { font-size: 12px; margin-left: 10px; }
+}
+
+
+
+
+
+
+
+
+
+
+/* শুধুমাত্র মোবাইল ডিভাইসের জন্য শ্যাডো রিমুভ */
+@media (max-width: 768px) {
+    /* পেজ র‍্যাপারের শ্যাডো বন্ধ */
+    .stf__wrapper {
+        box-shadow: none !important;
+        background: transparent !important;
+    }
+
+    /* পেজের বর্ডার এবং শ্যাডো বন্ধ */
+    .fbpH-page {
+        box-shadow: none !important; 
+        border: none !important;
+        border-right: 1px solid #ddd; /* ডান পাশে হালকা বর্ডার রাখতে পারেন পেজ বোঝানোর জন্য */
+    }
+    
+    /* হার্ড কভারের শ্যাডো ফিক্স */
+    .stf__item {
+        box-shadow: none !important;
+    }
 }
