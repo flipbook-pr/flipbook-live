@@ -307,3 +307,81 @@
 
 
 
+
+
+
+
+
+
+
+/* --- Controls Bar Layout --- */
+.fbpH-controls {
+    justify-content: flex-start !important; /* বাম দিক থেকে শুরু */
+    padding: 0 15px !important;
+}
+
+/* Page Info on Mobile Bar */
+.fbpH-page-info-mobile {
+    color: #ccc; font-size: 14px; font-weight: 500;
+    margin-left: 15px;
+    font-family: 'Poppins', sans-serif;
+}
+#fbpH-page-current { color: #f1c40f; font-weight: bold; }
+
+/* --- Hidden More Menu --- */
+.fbpH-more-menu {
+    position: absolute;
+    bottom: 70px; /* কন্ট্রোল বারের উপরে */
+    right: 10px;
+    width: 220px;
+    background: rgba(20, 20, 20, 0.95);
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 10px;
+    display: none; /* ডিফল্টভাবে লুকানো */
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 10010;
+    backdrop-filter: blur(10px);
+    animation: slideUp 0.3s ease;
+}
+
+.fbpH-more-menu.active { display: flex; }
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Menu Grid Items */
+.fbpH-menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* দুই কলাম */
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.fbpH-menu-item {
+    background: #333; border: none; color: #fff;
+    padding: 10px; border-radius: 6px;
+    font-size: 13px; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 5px;
+    transition: 0.2s;
+}
+.fbpH-menu-item:hover { background: #f1c40f; color: #000; }
+.fbpH-menu-item i { font-size: 18px; }
+
+/* Menu Footer (Page Input) */
+.fbpH-menu-footer {
+    border-top: 1px solid #444;
+    padding-top: 10px;
+    text-align: center; color: #ccc; font-size: 13px;
+    display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+
+/* --- Mobile Responsive Fixes --- */
+@media (max-width: 600px) {
+    .fbpH-controls { padding: 0 10px !important; }
+    .fbpH-btn { width: 40px; height: 40px; font-size: 16px; }
+    .fbpH-page-info-mobile { font-size: 12px; margin-left: 10px; }
+}
