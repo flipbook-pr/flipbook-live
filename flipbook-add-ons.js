@@ -334,10 +334,40 @@ render: function(pageIndex, container) {
         else if (media.type === 'video') { 
             item.innerHTML = `<video controls playsinline style="width:100%; height:100%;"><source src="${media.url}" type="video/mp4"></video>`;
         }
-        // 🔥 ৫. নতুন যোগ করা: গুগল ম্যাপ (এটি মিসিং ছিল)
-        else if (media.type === 'google_map') {
-            // গুগল ম্যাপের জন্য আইফ্রেম তৈরি
-            item.innerHTML = `<iframe src="${media.url}" style="width:100%; height:100%; border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+else if (media.type === 'google_map') {
+            // ১. ম্যাপের জন্য একটি র‍্যাপার ডিভ তৈরি (সাদা ব্যাকগ্রাউন্ড সহ)
+            const mapWrapper = document.createElement('div');
+            mapWrapper.style.width = "100%";
+            mapWrapper.style.height = "100%";
+            mapWrapper.style.backgroundColor = "#ffffff"; // কালো বক্স ফিক্স
+            mapWrapper.style.overflow = "hidden";
+            
+            // ২. মোবাইল রেন্ডারিং গ্লিচ ফিক্স (Hardware Acceleration Trick)
+            // এটি ব্রাউজারকে বলে এই অংশটি আলাদাভাবে রেন্ডার করতে
+            mapWrapper.style.transform = "translate3d(0, 0, 0)"; 
+            mapWrapper.style.webkitTransform = "translate3d(0, 0, 0)";
+
+            // ৩. আইফ্রেম তৈরি
+            mapWrapper.innerHTML = `<iframe 
+                src="${media.url}" 
+                width="100%" 
+                height="100%" 
+                style="border:0; width:100%; height:100%; display:block;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>`;
+
+            item.appendChild(mapWrapper);
+
+            // ৪. ম্যাপে টাচ করলে যাতে বই উল্টে না যায়
+            item.addEventListener('touchstart', (e) => {
+                e.stopPropagation(); // ইভেন্ট বাবলিং বন্ধ
+            }, { passive: false });
+            
+            item.addEventListener('touchmove', (e) => {
+                e.stopPropagation(); // ম্যাপ প্যান করার সময় বই যাতে মুভ না করে
+            }, { passive: false });
         }
 
         // ইভেন্ট বাবলিং বন্ধ করা (যাতে ম্যাপে ক্লিক করলে পেজ ফ্লিপ না হয়)
