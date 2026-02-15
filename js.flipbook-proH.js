@@ -196,6 +196,13 @@ function renderLibrary() {
             totalPagesSpan.innerText = '0'; pageInput.value = '0';
             searchResultsDiv.innerHTML = '<div style="text-align:center; color:#666; margin-top:20px;">Enter keyword to search...</div>';
             searchInput.value = '';
+
+
+
+
+    // 🔥 নতুন লাইন: বডি আনলক করা
+    document.body.classList.remove('fbpH-locked');
+			
         }
 
         function autoResizeBook() {
@@ -508,7 +515,7 @@ bookStage.addEventListener('touchend', (e) => {
                 width: PAGE_WIDTH, height: PAGE_HEIGHT,
                 size: 'fixed', minWidth: 200, maxWidth: 8000, minHeight: 300, maxHeight: 8000,
                 showCover: true, usePortrait: false, flippingTime: 800, 
-                useMouseEvents: false, maxShadowOpacity: 0.3
+                useMouseEvents: false, maxShadowOpacity: 0.5
             });
             
             pageFlip.on('flip', (e) => { 
@@ -1169,7 +1176,8 @@ function finishLoading() {
 
         if(typeof AudiobookManager !== 'undefined') AudiobookManager.handlePageFlip();
     });
-
+    // 🔥 নতুন লাইন: বডি লক করা
+    document.body.classList.add('fbpH-locked');
     // ৬. বুকমার্ক চেক
     checkSavedBookmark(); 
     
