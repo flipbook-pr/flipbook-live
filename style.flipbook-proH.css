@@ -6,7 +6,7 @@
             --fbpH-accent: #f1c40f;
             --fbpH-text-main: 'Poppins', sans-serif;
             --fbpH-text-bn: 'Poppins', sans-serif;
-            --fbpH-footer-h: 60px;
+            --fbpH-footer-h: 50px;
             --fbpH-overlay-bg: rgba(0, 0, 0, 0.9);
 
             font-family: var(--fbpH-text-main);
