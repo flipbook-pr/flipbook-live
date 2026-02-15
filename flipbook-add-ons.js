@@ -298,7 +298,7 @@ render: function(pageIndex, container) {
     const layer = document.createElement('div');
     layer.className = 'fbpH-media-layer';
     
-    // 🔥 ফিক্স: মিডিয়া লেয়ারকে উপরে রাখা
+    // লেয়ার পজিশন ফিক্স
     layer.style.transform = "translateZ(1px)";
     layer.style.webkitTransform = "translateZ(1px)";
     layer.style.zIndex = "15";
@@ -311,29 +311,36 @@ render: function(pageIndex, container) {
         item.style.width = media.width + '%';
         item.style.height = media.height + '%';
         
-        // 🔥 ফিক্স: ভিডিও বা আইফ্রেম যাতে ফ্লিকার না করে
+        // ফ্লিকারিং ফিক্স
         item.style.transform = "translate3d(0,0,0)";
         item.style.backfaceVisibility = "hidden";
 
+        // ১. ইউটিউব
         if (media.type === 'youtube') {
             const embedSrc = this.getYouTubeSrc(media.url);
-            // wmode=transparent এবং html5=1 যোগ করা হয়েছে ফ্লিকারিং কমাতে
             item.innerHTML = `<iframe src="${embedSrc}&wmode=transparent" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:100%; height:100%; pointer-events:auto;"></iframe>`;
         } 
-        // ... অন্যান্য মিডিয়া টাইপ কোড একই থাকবে ...
+        // ২. ভিমিও
         else if (media.type === 'vimeo') {
              const embedSrc = this.getVimeoSrc(media.url);
              item.innerHTML = `<iframe src="${embedSrc}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="width:100%; height:100%;"></iframe>`;
         }
+        // ৩. অডিও
         else if (media.type === 'audio') {
             item.classList.add('fbpH-media-audio');
-            item.innerHTML = `<audio controls style="position:relative; z-index:100;"><source src="${media.url}" type="audio/mpeg"></audio>`;
+            item.innerHTML = `<audio controls style="width:100%; height:100%;"><source src="${media.url}" type="audio/mpeg"></audio>`;
         }
+        // ৪. ভিডিও
         else if (media.type === 'video') { 
             item.innerHTML = `<video controls playsinline style="width:100%; height:100%;"><source src="${media.url}" type="video/mp4"></video>`;
         }
+        // 🔥 ৫. নতুন যোগ করা: গুগল ম্যাপ (এটি মিসিং ছিল)
+        else if (media.type === 'google_map') {
+            // গুগল ম্যাপের জন্য আইফ্রেম তৈরি
+            item.innerHTML = `<iframe src="${media.url}" style="width:100%; height:100%; border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+        }
 
-        // ইভেন্ট বাবলিং বন্ধ করা
+        // ইভেন্ট বাবলিং বন্ধ করা (যাতে ম্যাপে ক্লিক করলে পেজ ফ্লিপ না হয়)
         item.addEventListener('mousedown', (e) => e.stopPropagation());
         item.addEventListener('touchstart', (e) => e.stopPropagation(), {passive: false});
         item.addEventListener('click', (e) => e.stopPropagation());
