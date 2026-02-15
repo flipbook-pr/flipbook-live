@@ -12,7 +12,7 @@ const libraryData = [
 
         leadGenConfig: { 
             enabled: true, 
-            lockPage: 12 
+            lockPage: 10 
         }
     },
     {
@@ -22,7 +22,8 @@ const libraryData = [
         url: "https://flipbook-pr.github.io/flipbook/Business.pdf",
 
         leadGenConfig: { 
-            enabled: false 
+            enabled: true, 
+            lockPage: 6 
         }
     },
     {
@@ -30,7 +31,11 @@ const libraryData = [
         title: "Media feature with Wedding",
         cover: "https://flipbook-pr.github.io/flipbook/Wedding_2.jpg",
         url: "https://flipbook-pr.github.io/flipbook/Wedding.pdf",
-
+		
+        leadGenConfig: { 
+            enabled: true, 
+            lockPage: 6 
+        }
     },
 	
 	
@@ -40,7 +45,11 @@ const libraryData = [
         title: "Lead Gen feature with Combat",
         cover: "https://flipbook-pr.github.io/flipbook/Combat.jpg",
         url: "https://flipbook-pr.github.io/flipbook/Combat.pdf",
-
+		
+        leadGenConfig: { 
+            enabled: true, 
+            lockPage: 4 
+        }
     },	
 
 
@@ -49,7 +58,12 @@ const libraryData = [
                 id: "Happiness",
 				title: "Maps feature with Happiness",
                 cover: "https://flipbook-pr.github.io/flipbook/Happiness.jpg",
-                url: "https://flipbook-pr.github.io/flipbook/Happiness.pdf"
+                url: "https://flipbook-pr.github.io/flipbook/Happiness.pdf",
+		
+				leadGenConfig: { 
+					enabled: true, 
+					lockPage: 6 
+				}	
             },
             {
 				id: "Sharpening",
@@ -59,7 +73,6 @@ const libraryData = [
             }	
 	
 ];
-
 
 
 
@@ -85,10 +98,18 @@ const HotspotManager = {
         
         // 📘 Catalog 1: Summer Collection
         "Business": {
-            2: [ // Page 2 (Index starts at 0, so actually 3rd page if cover exists)
+            1: [ // Page 2 (Index starts at 0, so actually 3rd page if cover exists)
                 { x: 30, y: 40, title: "Vintage Watch", price: "$120.00", img: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=300", link: "#" },
                 { x: 70, y: 60, title: "Leather Bag", price: "$85.50", img: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=300", link: "#" }
             ],
+			
+			
+            2: [ // Page 2 (Index starts at 0, so actually 3rd page if cover exists)
+                { x: 30, y: 40, title: "Vintage Watch", price: "$120.00", img: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=300", link: "#" },
+                { x: 70, y: 60, title: "Leather Bag", price: "$85.50", img: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=300", link: "#" }
+            ],			
+			
+			
 			
             3: [ // Page 2 (Index starts at 0, so actually 3rd page if cover exists)
                 { x: 30, y: 40, title: "Vintage Watch", price: "$120.00", img: "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=300", link: "#" },
@@ -106,20 +127,24 @@ const HotspotManager = {
         },
 
         // 📘 Catalog 2: Winter Collection
-        "cat_winter": {
+        "Furniture": {
             3: [
-                { x: 50, y: 50, title: "Winter Jacket", price: "$200.00", img: "https://images.unsplash.com/photo-1551028919-ac66c9a3d999?w=300", link: "#" }
+                { x: 70, y: 25, title: "Furniture", price: "$200.00", img: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300", link: "#" }
             ],
-            5: [
-                 { x: 20, y: 30, title: "Snow Boots", price: "$150.00", img: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300", link: "#" }
+            8: [
+                 { x: 35, y: 50, title: "Furniture", price: "$150.00", img: "https://images.unsplash.com/photo-1634234498573-29224acf2907?w=300", link: "#" }
             ]
         },
 
         // 📘 Catalog 3: Electronics
-        "cat_tech": {
+        "Sharpening": {
             1: [
-                { x: 40, y: 40, title: "Smart Headphone", price: "$299.00", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300", link: "#" }
-            ]
+                { x: 60, y: 50, title: "Smart Headphone", price: "$299.00", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300", link: "#" }
+            ],
+			
+            2: [
+                { x: 50, y: 70, title: "Smart Headphone", price: "$299.00", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300", link: "#" }
+            ]			
         },
 
         // 📘 Catalog 4: Furniture
@@ -241,27 +266,109 @@ const MediaManager = {
     masterConfig: {
         // Example for Catalog 1
         "Furniture": {
+            1: [
+
+                {
+                    type: 'audio',
+                    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+                    x: 20, y: 83, width: 45, height: 7
+                }
+            ],
+			
+			
             2: [
                 {
                     type: 'youtube',
                     // এখন আপনি সাধারণ লিংক দিলেও কাজ করবে
                     url: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', 
-                    x: 10, y: 10, width: 50, height: 25 
-                },
-                {
-                    type: 'audio',
-                    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-                    x: 60, y: 10, width: 30, height: 8
+                    x: 28, y: 65, width: 72, height: 35 
                 }
-            ],
+            ],			
+			
+			
             4: [
                 {
                     type: 'google_map',
                     url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.9024424301337!2d90.39108031536267!3d23.75085809467747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b888ad3b91bf%3A0xbcb087062e3e1e10!2sDhaka!5e0!3m2!1sen!2sbd!4v1633512345678',
-                    x: 10, y: 60, width: 80, height: 30
+                    x: 25, y: 58, width: 74, height: 35
+                }
+            ]
+        },
+		
+		
+        "Wedding": {
+            1: [
+
+                {
+                    type: 'audio',
+                    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+                    x: 15, y: 56, width: 45, height: 7
+                }
+            ],
+			
+			
+            4: [
+                {
+                    type: 'youtube',
+                    // এখন আপনি সাধারণ লিংক দিলেও কাজ করবে
+                    url: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', 
+                    x: 30, y: 30, width: 65, height: 30 
+                }
+            ],			
+			
+			
+            6: [
+                {
+                    type: 'google_map',
+                    url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.9024424301337!2d90.39108031536267!3d23.75085809467747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b888ad3b91bf%3A0xbcb087062e3e1e10!2sDhaka!5e0!3m2!1sen!2sbd!4v1633512345678',
+                    x: 25, y: 65, width: 74, height: 35
+                }
+            ]
+        },		
+		
+        "Happiness": {			
+            3: [
+                {
+                    type: 'youtube',
+                    // এখন আপনি সাধারণ লিংক দিলেও কাজ করবে
+                    url: 'https://www.youtube.com/watch?v=aqz-KE-bpKQ', 
+                    x: 15, y: 40, width: 70, height: 35 
+                }
+            ],			
+			
+			
+            8: [
+                {
+                    type: 'google_map',
+                    url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.9024424301337!2d90.39108031536267!3d23.75085809467747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b888ad3b91bf%3A0xbcb087062e3e1e10!2sDhaka!5e0!3m2!1sen!2sbd!4v1633512345678',
+                    x: 15, y: 40, width: 74, height: 35
+                }
+            ]
+        },	
+
+
+        "Sharpening": {			
+            2: [
+                {
+                    type: 'audio',
+                    url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+                    x: 15, y: 20, width: 45, height: 7
+                }
+            ],			
+			
+			
+            6: [
+                {
+                    type: 'google_map',
+                    url: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3651.9024424301337!2d90.39108031536267!3d23.75085809467747!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b888ad3b91bf%3A0xbcb087062e3e1e10!2sDhaka!5e0!3m2!1sen!2sbd!4v1633512345678',
+                    x: 15, y: 50, width: 74, height: 35
                 }
             ]
         }
+
+
+		
+		
     },
 
     setActiveBook: function(bookId) {
