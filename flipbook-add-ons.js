@@ -84,6 +84,7 @@ const libraryData = [
 
 
 
+
 /**
  * FlipBook Pro - Shoppable Hotspot Manager (Multi-Catalog Supported)
  */
@@ -435,7 +436,7 @@ render: function(pageIndex, container) {
         // ৩. অডিও
         else if (media.type === 'audio') {
             item.classList.add('fbpH-media-audio');
-            item.innerHTML = `<audio controls style="width:100%; height:100%;"><source src="${media.url}" type="audio/mpeg"></audio>`;
+            item.innerHTML = `<audio controls ><source src="${media.url}" type="audio/mpeg"></audio>`;
         }
         // ৪. ভিডিও
         else if (media.type === 'video') { 
