@@ -2,75 +2,92 @@
 	
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-        // =============================================
-        // 🛠️ DYNAMIC INTERFACE INJECTION
-        // =============================================
-        const appInterfaceHTML = `
-            <audio id="fbpH-sound" src="https://assets.mixkit.co/active_storage/sfx/2070/2070-preview.mp3"></audio>
-            <div id="fbpH-toast" class="fbpH-toast">Bookmark saved!</div>
 
-            <div id="fbpH-loader" class="fbpH-loader-container">
-                <div class="fbpH-loader"></div>
-                <div id="fbpH-loader-text" class="fbpH-loader-text">Initializing...</div>
+// =============================================
+// 🛠️ DYNAMIC INTERFACE INJECTION (UPDATED FOR MOBILE)
+// =============================================
+const appInterfaceHTML = `
+    <audio id="fbpH-sound" src="https://assets.mixkit.co/active_storage/sfx/2070/2070-preview.mp3"></audio>
+    <div id="fbpH-toast" class="fbpH-toast">Bookmark saved!</div>
+
+    <div id="fbpH-loader" class="fbpH-loader-container">
+        <div class="fbpH-loader"></div>
+        <div id="fbpH-loader-text" class="fbpH-loader-text">Initializing...</div>
+    </div>
+
+    <div id="fbpH-popup" class="fbpH-overlay">
+        <div id="fbpH-btn-close" class="fbpH-close-btn" title="Close App"><i class="fas fa-times"></i></div>
+        
+        <!-- Thumb Sidebar -->
+        <div class="fbpH-sidebar" id="fbpH-sidebar">
+            <div class="fbpH-sidebar-header">
+                <span>Page list</span>
+                <div id="fbpH-sidebar-close" class="fbpH-sidebar-close-icon"><i class="fas fa-times"></i></div>
+            </div>
+            <div id="fbpH-thumb-container"></div>
+        </div>
+
+        <!-- Search Panel -->
+        <div class="fbpH-search-panel" id="fbpH-search-panel">
+             <div class="fbpH-sidebar-header">
+                <span>Search</span>
+                <div id="fbpH-search-close" class="fbpH-sidebar-close-icon"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="fbpH-search-box">
+                <input type="text" id="fbpH-search-input" class="fbpH-search-input" placeholder="Type text...">
+                <button id="fbpH-search-go" class="fbpH-search-btn-go">GO</button>
+            </div>
+            <div id="fbpH-search-results">
+                <div style="text-align:center; color:#666; margin-top:20px;">Enter keyword to search...</div>
+            </div>
+        </div>
+
+        <div class="fbpH-arrow fbpH-prev" id="fbpH-float-prev"><i class="fas fa-chevron-left"></i></div>
+        <div class="fbpH-arrow fbpH-next" id="fbpH-float-next"><i class="fas fa-chevron-right"></i></div>
+
+        <div class="fbpH-stage" id="fbpH-stage">
+            <div class="fbpH-zoom-layer" id="fbpH-zoom-layer"></div>
+        </div>
+
+        <!-- 🔥 NEW CONTROL BAR STRUCTURE -->
+        <div class="fbpH-controls" id="fbpH-controls">
+            
+            <!-- ১. visible buttons (সবসময় দেখা যাবে) -->
+            <button class="fbpH-btn" id="fbpH-btn-thumbs" title="Pages"><i class="fas fa-th-large"></i></button>
+            <button class="fbpH-btn" id="fbpH-btn-audio" title="Audio"><i class="fas fa-headphones"></i></button>
+            <button class="fbpH-btn" id="fbpH-btn-search" title="Search"><i class="fas fa-search"></i></button>
+            
+            <!-- পেজ কাউন্টার (মাঝখানে থাকবে) -->
+            <div class="fbpH-page-info-mobile">
+                <span id="fbpH-page-current">1</span> / <span id="fbpH-total-pages-mob">0</span>
             </div>
 
-            <div id="fbpH-popup" class="fbpH-overlay">
-                <div id="fbpH-btn-close" class="fbpH-close-btn" title="Close App"><i class="fas fa-times"></i></div>
+            <!-- ২. More Button (থ্রি ডট) -->
+            <button class="fbpH-btn" id="fbpH-btn-more" title="More Options" style="margin-left:auto;">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+
+            <!-- ৩. Hidden Menu (পপআপ মেনু) -->
+            <div class="fbpH-more-menu" id="fbpH-more-menu">
+                <div class="fbpH-menu-grid">
+                    <button class="fbpH-menu-item" id="fbpH-btn-zoom-in"><i class="fas fa-plus"></i> Zoom In</button>
+                    <button class="fbpH-menu-item" id="fbpH-btn-zoom-out"><i class="fas fa-minus"></i> Zoom Out</button>
+                    <button class="fbpH-menu-item" id="fbpH-btn-fullscreen"><i class="fas fa-expand"></i> Fullscreen</button>
+                    <button class="fbpH-menu-item" id="fbpH-btn-autoplay"><i class="fas fa-play"></i> AutoPlay</button>
+                    <button class="fbpH-menu-item" id="fbpH-btn-bookmark"><i class="far fa-bookmark"></i> Bookmark</button>
+                    <button class="fbpH-menu-item" id="fbpH-btn-load-mark" style="display:none;"><i class="fas fa-history"></i> Load Mark</button>
+                </div>
                 
-                <!-- Thumb Sidebar -->
-                <div class="fbpH-sidebar" id="fbpH-sidebar">
-                    <div class="fbpH-sidebar-header">
-                        <span>Page list</span>
-                        <div id="fbpH-sidebar-close" class="fbpH-sidebar-close-icon" title="Close List">
-                            <i class="fas fa-times"></i>
-                        </div>
-                    </div>
-                    <div id="fbpH-thumb-container"></div>
-                </div>
-
-                <!-- Search Panel -->
-                <div class="fbpH-search-panel" id="fbpH-search-panel">
-                     <div class="fbpH-sidebar-header">
-                        <span>Search</span>
-                        <div id="fbpH-search-close" class="fbpH-sidebar-close-icon" title="Close Search">
-                            <i class="fas fa-times"></i>
-                        </div>
-                    </div>
-                    <div class="fbpH-search-box">
-                        <input type="text" id="fbpH-search-input" class="fbpH-search-input" placeholder="Type text...">
-                        <button id="fbpH-search-go" class="fbpH-search-btn-go">GO</button>
-                    </div>
-                    <div id="fbpH-search-results">
-                        <div style="text-align:center; color:#666; margin-top:20px;">Enter keyword to search...</div>
-                    </div>
-                </div>
-
-                <div class="fbpH-arrow fbpH-prev" id="fbpH-float-prev"><i class="fas fa-chevron-left"></i></div>
-                <div class="fbpH-arrow fbpH-next" id="fbpH-float-next"><i class="fas fa-chevron-right"></i></div>
-
-                <div class="fbpH-stage" id="fbpH-stage">
-                    <div class="fbpH-zoom-layer" id="fbpH-zoom-layer"></div>
-                </div>
-
-                <div class="fbpH-controls" id="fbpH-controls">
-                    <button class="fbpH-btn" id="fbpH-btn-thumbs" title="Toggle Page List"><i class="fas fa-th-large"></i></button>
-                    <button class="fbpH-btn" id="fbpH-btn-search" title="Search"><i class="fas fa-search"></i></button> 
-<!-- Search Button এর পরে এই লাইনটি যোগ করুন -->
-<button class="fbpH-btn" id="fbpH-btn-audio" title="Audiobook Mode"><i class="fas fa-headphones"></i></button>					
-                    <div class="fbpH-divider"></div>
-                    <button class="fbpH-btn" id="fbpH-btn-autoplay" title="Auto Play"><i class="fas fa-play"></i></button>
-                    <button class="fbpH-btn" id="fbpH-btn-bookmark" title="Bookmark"><i class="far fa-bookmark"></i></button>
-                    <button class="fbpH-btn" id="fbpH-btn-load-mark" style="display:none; color: var(--fbpH-accent);" title="Go to Bookmark"><i class="fas fa-history"></i></button>
-                    <div class="fbpH-divider"></div>
-                    <button class="fbpH-btn" id="fbpH-btn-zoom-out" title="Zoom Out"><i class="fas fa-minus"></i></button>
-                    <button class="fbpH-btn" id="fbpH-btn-zoom-in" title="Zoom In"><i class="fas fa-plus"></i></button>
-                    <button class="fbpH-btn" id="fbpH-btn-fullscreen" title="Full Screen"><i class="fas fa-expand"></i></button>
-                    <div class="fbpH-divider"></div>
+                <!-- Page Jump Input inside Menu -->
+                <div class="fbpH-menu-footer">
+                    <span>Go to page: </span>
                     <input type="number" id="fbpH-page-input" class="fbpH-page-input" value="0">
                     <span class="fbpH-total-page">/ <span id="fbpH-total-pages">0</span></span>
                 </div>
             </div>
-        `;
+        </div>
+    </div>
+`;
         
         document.getElementById('fbpH-root').insertAdjacentHTML('beforeend', appInterfaceHTML);
 
@@ -1244,3 +1261,62 @@ function updateVisibleHighlights() {
 }
 
 
+
+
+
+
+
+
+// --- More Menu Logic ---
+setTimeout(() => {
+    const btnMore = document.getElementById('fbpH-btn-more');
+    const moreMenu = document.getElementById('fbpH-more-menu');
+    const pageCurrentSpan = document.getElementById('fbpH-page-current');
+    const totalPagesMobSpan = document.getElementById('fbpH-total-pages-mob');
+    const totalPagesMain = document.getElementById('fbpH-total-pages');
+
+    // ১. মেনু টগল করা
+    if (btnMore && moreMenu) {
+        btnMore.addEventListener('click', (e) => {
+            e.stopPropagation();
+            moreMenu.classList.toggle('active');
+            
+            // বাটন কালার চেঞ্জ
+            if(moreMenu.classList.contains('active')) {
+                btnMore.classList.add('active-btn');
+            } else {
+                btnMore.classList.remove('active-btn');
+            }
+        });
+    }
+
+    // ২. মেনুর বাইরে ক্লিক করলে মেনু বন্ধ হবে
+    document.addEventListener('click', (e) => {
+        if (moreMenu && moreMenu.classList.contains('active')) {
+            if (!moreMenu.contains(e.target) && !btnMore.contains(e.target)) {
+                moreMenu.classList.remove('active');
+                btnMore.classList.remove('active-btn');
+            }
+        }
+    });
+
+    // ৩. পেজ কাউন্টার আপডেট সিঙ্ক করা (মোবাইল ভিউর জন্য)
+    // আমরা অরিজিনাল updatePageInfo ফাংশনকে একটু হুক করছি
+    const originalUpdatePageInfo = window.updatePageInfo || function(){};
+    window.updatePageInfo = function() {
+        // অরিজিনাল কোড কল করা (যদি থাকে)
+        if(typeof pageFlip !== 'undefined' && pageInput) {
+             pageInput.value = (pageFlip.getCurrentPageIndex() + 1);
+        }
+        
+        // আমাদের নতুন মোবাইল কাউন্টার আপডেট
+        if(pageFlip && pageCurrentSpan) {
+            pageCurrentSpan.innerText = (pageFlip.getCurrentPageIndex() + 1);
+        }
+        if(pageFlip && totalPagesMobSpan) {
+            // totalPagesMain থেকে ভ্যালু নিয়ে মোবাইলে দেখানো
+            totalPagesMobSpan.innerText = totalPagesMain.innerText; 
+        }
+    };
+
+}, 1000); // ১ সেকেন্ড দেরি করে রান হবে যাতে DOM রেডি থাকে
