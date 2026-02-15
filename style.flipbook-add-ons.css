@@ -166,7 +166,7 @@
     pointer-events: auto; /* মিডিয়াতে ক্লিক করা যাবে */
     overflow: hidden;
     transition: transform 0.2s;
-    border: 2px solid rgba(255,255,255,0.1);
+
 }
 
 .fbpH-media-item:hover {
@@ -181,10 +181,10 @@
 /* Audio Player styling */
 .fbpH-media-audio {
     background: #f1f1f1;
-    border-radius: 30px;
+    border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
     border: 1px solid #ccc;
 }
 .fbpH-media-audio audio {
-    width: 90%; height: 30px; outline: none;
+    width: 90%; height: 50px; outline: none;
 }
