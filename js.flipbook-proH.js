@@ -1133,26 +1133,25 @@ function finishLoading() {
     // ২. পেপার টাইপ সেট করা
     pages.forEach(p => p.setAttribute('data-density', 'hard'));
 
-    // ৩. পেজ লোড করা (এখানে pageFlip ব্যবহার করা হয়েছে)
+    // ৩. পেজ লোড করা
     pageFlip.loadFromHTML(pages);
     
     // ৪. Lead Generation ইনিশিয়াল করা
     if(typeof LeadGen !== 'undefined') LeadGen.init();
 
-// ✅ সঠিক: pageFlip.on(...)
-pageFlip.on('flip', (e) => { 
-    updatePageInfo(); 
-    playSound(); 
-    updateZoom();
-    
-    if(!globalPdfDoc) manageImageMemory(e.data);
-    if(typeof LeadGen !== 'undefined') LeadGen.checkLock(e.data);
-    if(typeof HotspotManager !== 'undefined') HotspotManager.closeAllModals();
-    if(typeof MediaManager !== 'undefined') MediaManager.stopAllMedia();
+    // ৫. ফ্লিপ ইভেন্ট লিসেনার
+    pageFlip.on('flip', (e) => { 
+        updatePageInfo(); 
+        playSound(); 
+        updateZoom();
+        
+        if(!globalPdfDoc) manageImageMemory(e.data);
+        if(typeof LeadGen !== 'undefined') LeadGen.checkLock(e.data);
+        if(typeof HotspotManager !== 'undefined') HotspotManager.closeAllModals();
+        if(typeof MediaManager !== 'undefined') MediaManager.stopAllMedia();
 
-    // অডিওবুক আপডেট
-    if(typeof AudiobookManager !== 'undefined') AudiobookManager.handlePageFlip();
-});
+        if(typeof AudiobookManager !== 'undefined') AudiobookManager.handlePageFlip();
+    });
 
     // ৬. বুকমার্ক চেক
     checkSavedBookmark(); 
@@ -1161,10 +1160,26 @@ pageFlip.on('flip', (e) => {
     loader.style.display = 'none'; 
     controls.classList.add('active'); 
     
+    // 🔥 পরিবর্তন: মোবাইল ডিভাইসে অটোমেটিক ১৫০% জুম লজিক
     setTimeout(() => { 
+        // প্রথমে ডিফল্ট ফিট করা
+        autoResizeBook();
+
+        // যদি স্ক্রিন সাইজ ৭৬৮ পিক্সেলের কম হয় (মোবাইল ডিভাইস)
+        if (window.innerWidth < 768) {
+            currentZoom = 1.5; // ১৫০% জুম (1.5 গুণ)
+            
+            // জুম করার পর পজিশন রিসেট (সেন্টারে রাখার জন্য)
+            translateX = 0; 
+            translateY = 0;
+            
+            // জুম ডিরেকশন আপডেট (যাতে জুম আউট বাটন কাজ করে)
+            zoomDirection = -1; 
+        }
+
         updateZoom(); 
         updatePageInfo(); 
-    }, 100);
+    }, 500); // সময়টা একটু বাড়িয়ে ৫০০ms করা হলো যাতে রেন্ডার ঠিকমত শেষ হয়
 }
         
         function readFileAsDataURL(file) { return new Promise((r, j) => { const x = new FileReader(); x.onload = () => r(x.result); x.onerror = j; x.readAsDataURL(file); }); }
